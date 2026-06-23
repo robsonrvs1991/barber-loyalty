@@ -1,0 +1,11 @@
+<% content_for :title, "New loyalty program" %>
+
+<h1>New loyalty program</h1>
+
+<%= render "form", loyalty_program: @loyalty_program %>
+
+<br>
+
+<div>
+  <%= link_to "Back to loyalty programs", loyalty_programs_path %>
+</div>

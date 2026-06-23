@@ -1,0 +1,7 @@
+<%= form_with model: @service do |form| %>
+  <% if @service.errors.any? %><div class="alert alert-danger"><%= @service.errors.full_messages.join(', ') %></div><% end %>
+  <div class="mb-3"><%= form.label :name, "Nome", class: "form-label" %><%= form.text_field :name, class: "form-control" %></div>
+  <div class="mb-3"><%= form.label :points, "Pontos gerados", class: "form-label" %><%= form.number_field :points, class: "form-control" %></div>
+  <div class="form-check mb-3"><%= form.check_box :active, class: "form-check-input" %><%= form.label :active, "Ativo", class: "form-check-label" %></div>
+  <%= form.submit "Salvar", class: "btn btn-primary" %> <%= link_to "Voltar", services_path, class: "btn btn-outline-secondary" %>
+<% end %>

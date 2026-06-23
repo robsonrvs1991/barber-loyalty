@@ -1,0 +1,9 @@
+<h1>Editar programa de fidelidade</h1>
+<div class="card"><div class="card-body">
+<%= form_with model: @loyalty_program, url: loyalty_program_path do |form| %>
+  <% if @loyalty_program.errors.any? %><div class="alert alert-danger"><%= @loyalty_program.errors.full_messages.join(', ') %></div><% end %>
+  <div class="mb-3"><%= form.label :required_visits, "Quantidade de pontos para ganhar", class: "form-label" %><%= form.number_field :required_visits, class: "form-control" %></div>
+  <div class="mb-3"><%= form.label :reward_description, "Recompensa", class: "form-label" %><%= form.text_field :reward_description, class: "form-control", placeholder: "Ex: Corte grátis" %></div>
+  <%= form.submit "Salvar", class: "btn btn-primary" %> <%= link_to "Voltar", loyalty_program_path, class: "btn btn-outline-secondary" %>
+<% end %>
+</div></div>

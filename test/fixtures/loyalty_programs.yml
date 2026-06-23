@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  required_visits: 1
+  reward_description: MyString
+  barbershop: one
+
+two:
+  required_visits: 1
+  reward_description: MyString
+  barbershop: two

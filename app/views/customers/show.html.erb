@@ -1,0 +1,15 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0"><%= @customer.name %></h1>
+  <div class="d-flex gap-2"><%= link_to "Editar", edit_customer_path(@customer), class: "btn btn-outline-primary" %><%= link_to "Voltar", customers_path, class: "btn btn-outline-secondary" %></div>
+</div>
+
+<% if flash[:notice].to_s.include?("Senha temporária") %><div class="alert alert-success"><%= flash[:notice] %></div><% end %>
+
+<div class="row">
+  <div class="col-md-4 mb-4"><div class="card shadow-sm"><div class="card-body"><h2 class="h5">Dados de acesso</h2><p class="mb-1"><strong>E-mail:</strong> <%= @customer.email %></p><p class="mb-1"><strong>Telefone:</strong> <%= @customer.phone %></p><p class="mb-0"><strong>Pontos:</strong> <%= @customer.loyalty_points.to_i %></p></div></div></div>
+  <div class="col-md-8 mb-4"><div class="card shadow-sm"><div class="card-body"><h2 class="h5">Link para o cliente</h2><p class="text-muted">Envie este endereço para o cliente acessar o cartão fidelidade:</p><code>http://localhost:3000/cliente/login</code></div></div></div>
+</div>
+
+<div class="card shadow-sm mb-4"><div class="card-body"><h2 class="h5">Histórico de Atendimentos</h2>
+<% if @appointments.any? %><table class="table"><thead><tr><th>Serviço</th><th>Data</th></tr></thead><tbody><% @appointments.each do |appointment| %><tr><td><%= appointment.service&.name || "Atendimento" %></td><td><%= l(appointment.created_at, format: :short) %></td></tr><% end %></tbody></table><% else %><p class="text-muted mb-0">Nenhum atendimento registrado.</p><% end %>
+</div></div>

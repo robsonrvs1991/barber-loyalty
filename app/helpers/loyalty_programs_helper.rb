@@ -1,0 +1,2 @@
+module LoyaltyProgramsHelper
+end

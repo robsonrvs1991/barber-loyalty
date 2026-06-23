@@ -1,0 +1,32 @@
+<%= form_with(model: loyalty_program) do |form| %>
+  <% if loyalty_program.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(loyalty_program.errors.count, "error") %> prohibited this loyalty_program from being saved:</h2>
+
+      <ul>
+        <% loyalty_program.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :required_visits, style: "display: block" %>
+    <%= form.number_field :required_visits %>
+  </div>
+
+  <div>
+    <%= form.label :reward_description, style: "display: block" %>
+    <%= form.text_field :reward_description %>
+  </div>
+
+  <div>
+    <%= form.label :barbershop_id, style: "display: block" %>
+    <%= form.text_field :barbershop_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

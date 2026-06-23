@@ -1,0 +1,8 @@
+<div class="card">
+  <div class="card-body">
+    <h1>Programa de fidelidade</h1>
+    <p><strong>Meta:</strong> <%= @loyalty_program.required_visits %> ponto(s)</p>
+    <p><strong>Recompensa:</strong> <%= @loyalty_program.reward_description %></p>
+    <%= link_to "Editar", edit_loyalty_program_path, class: "btn btn-primary" %>
+  </div>
+</div>

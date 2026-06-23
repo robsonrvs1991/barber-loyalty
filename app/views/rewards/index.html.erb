@@ -1,0 +1,19 @@
+<h1>Recompensas</h1>
+<table class="table table-striped bg-white">
+<thead><tr><th>Cliente</th><th>Recompensa</th><th>Status</th><th>Gerada em</th><th></th></tr></thead>
+<tbody>
+<% @rewards.each do |reward| %>
+<tr>
+  <td><%= reward.customer.name %></td>
+  <td><%= reward.description %></td>
+  <td><%= reward.used ? "Utilizada" : "Disponível" %></td>
+  <td><%= l((reward.earned_at || reward.created_at), format: :short) %></td>
+  <td>
+    <% unless reward.used %>
+      <%= button_to "Marcar como utilizada", reward_path(reward), method: :patch, class: "btn btn-sm btn-success" %>
+    <% end %>
+  </td>
+</tr>
+<% end %>
+</tbody>
+</table>

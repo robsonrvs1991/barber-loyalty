@@ -1,0 +1,54 @@
+<% if barber? %>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h2"><%= @barbershop.name %></h1>
+      <p class="text-muted mb-0">Painel da barbearia</p>
+    </div>
+    <%= link_to "Registrar atendimento", new_appointment_path, class: "btn btn-primary" %>
+  </div>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted">Clientes</div><div class="fs-2 fw-bold"><%= @customers_count %></div></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted">Atendimentos</div><div class="fs-2 fw-bold"><%= @appointments_count %></div></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted">Recompensas</div><div class="fs-2 fw-bold"><%= @rewards_count %></div></div></div></div>
+    <div class="col-md-3"><div class="card"><div class="card-body"><div class="text-muted">Disponíveis</div><div class="fs-2 fw-bold"><%= @available_rewards_count %></div></div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Últimos atendimentos</div>
+    <div class="card-body">
+      <% if @recent_appointments.any? %>
+        <table class="table table-sm">
+          <thead><tr><th>Cliente</th><th>Serviço</th><th>Pontos</th><th>Data</th></tr></thead>
+          <tbody>
+            <% @recent_appointments.each do |a| %>
+              <tr><td><%= a.customer.name %></td><td><%= a.service.name %></td><td><%= a.points %></td><td><%= l(a.created_at, format: :short) %></td></tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="text-muted mb-0">Nenhum atendimento registrado.</p>
+      <% end %>
+    </div>
+  </div>
+<% else %>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h1 class="h3">Meu cartão fidelidade</h1>
+      <p class="text-muted"><%= @barbershop.name %></p>
+      <div class="display-5 fw-bold"><%= @points %> / <%= @target %></div>
+      <p class="mb-3">Pontos acumulados. Recompensa: <strong><%= @program&.reward_description || "Corte grátis" %></strong></p>
+      <div class="progress mb-3" style="height: 24px;">
+        <div class="progress-bar" style="width: <%= [(@points % @target) * 100 / @target, 100].min %>%"></div>
+      </div>
+      <p>Faltam <strong><%= @remaining == @target ? @target : @remaining %></strong> ponto(s) para a próxima recompensa.</p>
+    </div>
+  </div>
+
+  <h2 class="h4 mt-4">Minhas recompensas</h2>
+  <% @rewards.each do |reward| %>
+    <div class="alert <%= reward.used ? 'alert-secondary' : 'alert-success' %>">
+      <strong><%= reward.description %></strong> - <%= reward.used ? 'Utilizada' : 'Disponível' %>
+    </div>
+  <% end %>
+<% end %>

@@ -1,0 +1,9 @@
+<h1>Editar barbearia</h1>
+<div class="card"><div class="card-body">
+<%= form_with model: @barbershop, url: barbershop_path do |form| %>
+  <div class="mb-3"><%= form.label :name, "Nome", class: "form-label" %><%= form.text_field :name, class: "form-control" %></div>
+  <div class="mb-3"><%= form.label :phone, "Telefone", class: "form-label" %><%= form.text_field :phone, class: "form-control" %></div>
+  <div class="mb-3"><%= form.label :address, "Endereço", class: "form-label" %><%= form.text_field :address, class: "form-control" %></div>
+  <%= form.submit "Salvar", class: "btn btn-primary" %>
+<% end %>
+</div></div>

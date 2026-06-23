@@ -1,0 +1,9 @@
+<h1>Atendimento</h1>
+<div class="card"><div class="card-body">
+<p><strong>Cliente:</strong> <%= @appointment.customer.name %></p>
+<p><strong>Serviço:</strong> <%= @appointment.service.name %></p>
+<p><strong>Pontos:</strong> <%= @appointment.points %></p>
+<p><strong>Pago:</strong> <%= @appointment.paid ? "Sim" : "Não" %></p>
+<p><strong>Data:</strong> <%= l(@appointment.created_at, format: :short) %></p>
+<%= link_to "Voltar", appointments_path, class: "btn btn-outline-secondary" %>
+</div></div>

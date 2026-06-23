@@ -1,0 +1,15 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Serviços</h1>
+  <%= link_to "Novo serviço", new_service_path, class: "btn btn-primary" %>
+</div>
+<table class="table table-striped bg-white">
+  <thead><tr><th>Nome</th><th>Pontos</th><th>Ativo</th><th></th></tr></thead>
+  <tbody>
+    <% @services.each do |service| %>
+      <tr>
+        <td><%= service.name %></td><td><%= service.points %></td><td><%= service.active ? "Sim" : "Não" %></td>
+        <td><%= link_to "Editar", edit_service_path(service), class: "btn btn-sm btn-outline-primary" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

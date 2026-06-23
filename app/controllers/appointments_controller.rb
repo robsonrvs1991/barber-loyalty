@@ -1,0 +1,42 @@
+class AppointmentsController < ApplicationController
+  before_action :require_login
+  before_action :require_barber
+
+  def index
+    @appointments = current_user.barbershop.appointments.includes(:customer, :barber, :service).order(created_at: :desc)
+  end
+
+  def show
+    @appointment = current_user.barbershop.appointments.find(params[:id])
+  end
+
+  def new
+    @appointment = current_user.barbershop.appointments.new(paid: true)
+    load_form_data
+  end
+
+  def create
+    @appointment = current_user.barbershop.appointments.new(appointment_params)
+    @appointment.barber = current_user
+    @appointment.points = @appointment.service&.points || 1
+
+    if @appointment.save
+      Reward.create_if_earned!(@appointment.customer, current_user.barbershop)
+      redirect_to customer_path(@appointment.customer), notice: "Atendimento registrado com sucesso."
+    else
+      load_form_data
+      render :new, status: :unprocessable_entity
+    end
+  end
+
+  private
+
+  def load_form_data
+    @customers = current_user.barbershop.customers.order(:name)
+    @services = current_user.barbershop.services.where(active: true).order(:name)
+  end
+
+  def appointment_params
+    params.require(:appointment).permit(:customer_id, :service_id, :paid, :notes)
+  end
+end

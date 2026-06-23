@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  customer: one
+  barbershop: one
+  description: MyString
+  used: false
+  used_at: 2026-06-23 16:08:24
+
+two:
+  customer: two
+  barbershop: two
+  description: MyString
+  used: false
+  used_at: 2026-06-23 16:08:24

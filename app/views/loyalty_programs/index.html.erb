@@ -1,0 +1,16 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, "Loyalty programs" %>
+
+<h1>Loyalty programs</h1>
+
+<div id="loyalty_programs">
+  <% @loyalty_programs.each do |loyalty_program| %>
+    <%= render loyalty_program %>
+    <p>
+      <%= link_to "Show this loyalty program", loyalty_program %>
+    </p>
+  <% end %>
+</div>
+
+<%= link_to "New loyalty program", new_loyalty_program_path %>

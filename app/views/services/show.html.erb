@@ -1,0 +1,4 @@
+<h1><%= @service.name %></h1>
+<p>Pontos: <%= @service.points %></p>
+<p>Ativo: <%= @service.active ? "Sim" : "Não" %></p>
+<%= link_to "Editar", edit_service_path(@service), class: "btn btn-primary" %>
