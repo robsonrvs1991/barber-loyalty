@@ -1,12 +1,23 @@
-# Correção: helpers de autenticação
+# Fideli
 
-Este patch expõe os métodos `logged_in?`, `barber?`, `customer?`, `current_user` e `current_barbershop` para as views.
+Plataforma de fidelização digital para pequenos negócios.
 
-Aplicar na raiz do projeto:
+## Funcionalidades atuais
 
-```bash
-cd ~/barber-loyalty
-unzip fix_auth_helpers.zip -d /tmp/fix_auth_helpers
-cp -r /tmp/fix_auth_helpers/* .
-bundle exec rails server
-```
+- Login da empresa
+- Cadastro de clientes
+- Cadastro de serviços
+- Registro de atendimentos
+- Pontuação por cliente
+- Área do cliente
+- Visualização de pontos
+
+## Acessos de teste
+
+Empresa:
+admin@barber.test
+123456
+
+Cliente:
+cliente@barber.test
+123456
