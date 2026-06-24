@@ -15,7 +15,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
       <div class="container">
         <% if controller_name.start_with?("client") || request.path.start_with?("/cliente") %>
-          <%= link_to "Fideli", cliente_path, class: "navbar-brand fw-semibold" %>
+          <%= link_to "Fideli", client_portal_path, class: "navbar-brand fw-semibold" %>
 
           <div class="navbar-nav ms-auto">
             <span class="navbar-text text-white-50 me-3">Meu cartão fidelidade</span>
