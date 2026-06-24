@@ -1,10 +1,20 @@
 class ApplicationController < ActionController::Base
-  helper_method :current_user, :current_barbershop, :logged_in?, :barber?, :customer?
+  helper_method :current_user,
+                :current_barbershop,
+                :current_client,
+                :logged_in?,
+                :client_logged_in?,
+                :barber?,
+                :customer?
 
   private
 
   def current_user
     @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
+  end
+
+  def current_client
+    @current_client ||= User.find_by(id: session[:client_user_id]) if session[:client_user_id]
   end
 
   def current_barbershop
@@ -14,6 +24,10 @@ class ApplicationController < ActionController::Base
 
   def logged_in?
     current_user.present?
+  end
+
+  def client_logged_in?
+    current_client.present?
   end
 
   def barber?
