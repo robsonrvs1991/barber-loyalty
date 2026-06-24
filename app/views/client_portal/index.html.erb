@@ -1,72 +1,121 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <div>
-    <h1 class="h3 mb-0">Olá, <%= @customer.name %>!</h1>
-    <p class="text-muted mb-0"><%= @barbershop.name %></p>
-  </div>
-  <%= button_to "Sair", client_logout_path, method: :delete, class: "btn btn-outline-secondary" %>
-</div>
-
-<div class="card shadow-sm mb-4">
-  <div class="card-body">
-    <h2 class="h5">Seu Cartão Fidelidade</h2>
-    <p class="text-muted mb-2"><%= @loyalty_program&.reward_description || "Recompensa configurável" %></p>
-
-    <div class="progress mb-3" style="height: 28px;">
-      <div class="progress-bar" role="progressbar" style="width: <%= @progress_percent %>%">
-        <%= @points %> de <%= @required_visits %>
-      </div>
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-start mb-4">
+    <div>
+      <p class="text-muted mb-1">Meu cartão fidelidade</p>
+      <h1 class="h3 mb-1">Olá, <%= @customer.name %>!</h1>
+      <p class="text-muted mb-0"><%= @barbershop.name %></p>
     </div>
 
-    <% if @remaining.zero? %>
-      <div class="alert alert-success mb-0">Parabéns! Você já atingiu a meta. Verifique sua recompensa disponível.</div>
-    <% else %>
-      <div class="alert alert-info mb-0">Faltam <strong><%= @remaining %></strong> atendimento(s) para ganhar.</div>
-    <% end %>
+    <%= button_to "Sair", cliente_logout_path, method: :delete, class: "btn btn-outline-secondary" rescue nil %>
   </div>
-</div>
 
-<div class="row">
-  <div class="col-md-6 mb-4">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h2 class="h5">Histórico de Atendimentos</h2>
-        <% if @appointments.any? %>
-          <ul class="list-group list-group-flush">
-            <% @appointments.each do |appointment| %>
-              <li class="list-group-item px-0 d-flex justify-content-between">
-                <span><%= appointment.service&.name || "Atendimento" %></span>
-                <small class="text-muted"><%= l(appointment.created_at, format: :short) %></small>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="text-muted mb-0">Nenhum atendimento registrado ainda.</p>
-        <% end %>
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h5 mb-2">Seu Cartão Fidelidade</h2>
+      <p class="text-muted mb-3"><%= @loyalty_program&.reward_description.presence || "Recompensa disponível ao completar a meta" %></p>
+
+      <% percent = [[(@points.to_f / @required_points) * 100, 100].min, 0].max %>
+
+      <div class="progress mb-3" style="height: 32px;">
+        <div class="progress-bar" role="progressbar" style="width: <%= percent %>%;">
+          <%= @points %> de <%= @required_points %>
+        </div>
       </div>
+
+      <% if @remaining_points.zero? %>
+        <div class="alert alert-success mb-0">
+          Parabéns! Você já atingiu a meta para ganhar uma recompensa.
+        </div>
+      <% else %>
+        <div class="alert alert-info mb-0">
+          Faltam <strong><%= @remaining_points %></strong> atendimento(s)/ponto(s) para sua próxima recompensa.
+        </div>
+      <% end %>
     </div>
   </div>
 
-  <div class="col-md-6 mb-4">
-    <div class="card shadow-sm h-100">
-      <div class="card-body">
-        <h2 class="h5">Recompensas</h2>
-        <% if @rewards.any? %>
-          <ul class="list-group list-group-flush">
-            <% @rewards.each do |reward| %>
-              <li class="list-group-item px-0">
-                <strong><%= reward.description %></strong><br>
-                <% if reward.used? %>
-                  <small class="text-muted">Utilizada em <%= l(reward.used_at, format: :short) if reward.used_at %></small>
-                <% else %>
-                  <span class="badge text-bg-success">Disponível</span>
-                <% end %>
-              </li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p class="text-muted mb-0">Nenhuma recompensa disponível ainda.</p>
-        <% end %>
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Minhas Recompensas</h2>
+
+          <% if @rewards.any? %>
+            <div class="list-group list-group-flush">
+              <% @rewards.each do |reward| %>
+                <div class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                  <div>
+                    <strong><%= reward.description %></strong>
+                    <div class="small text-muted">
+                      Gerada em <%= l(reward.created_at, format: :short) %>
+                    </div>
+                  </div>
+
+                  <% if reward.used? %>
+                    <span class="badge text-bg-secondary">Utilizada</span>
+                  <% else %>
+                    <span class="badge text-bg-success">Disponível</span>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted mb-0">Nenhuma recompensa disponível ainda.</p>
+          <% end %>
+        </div>
       </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Serviços Participantes</h2>
+
+          <% if @services.any? %>
+            <ul class="list-group list-group-flush">
+              <% @services.each do |service| %>
+                <li class="list-group-item px-0 d-flex justify-content-between">
+                  <span><%= service.name %></span>
+                  <span class="text-muted"><%= service.points.to_i %> ponto(s)</span>
+                </li>
+              <% end %>
+            </ul>
+          <% else %>
+            <p class="text-muted mb-0">Nenhum serviço cadastrado.</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Meus Atendimentos</h2>
+
+      <% if @appointments.any? %>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Serviço</th>
+                <th>Data</th>
+                <th class="text-end">Pontos</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @appointments.each do |appointment| %>
+                <tr>
+                  <td><%= appointment.service&.name || "Atendimento" %></td>
+                  <td><%= l(appointment.created_at, format: :short) %></td>
+                  <td class="text-end"><%= appointment.service&.points.to_i %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      <% else %>
+        <p class="text-muted mb-0">Nenhum atendimento registrado ainda.</p>
+      <% end %>
     </div>
   </div>
 </div>

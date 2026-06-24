@@ -1,0 +1,40 @@
+<p>Olá, <strong><%= @customer.name %></strong>!</p>
+
+<p>Temos uma ótima notícia para você. 🎉</p>
+
+<p>
+  Você acaba de conquistar uma nova recompensa no programa de fidelidade da
+  <strong><%= @barbershop.name %></strong>.
+</p>
+
+<p>
+  <strong>Sua recompensa disponível:</strong><br>
+  🎁 <%= @reward.description %>
+</p>
+
+<p>
+  Agradecemos pela sua confiança e preferência.
+</p>
+
+<p>
+  Será um prazer recebê-lo(a) novamente para aproveitar seu benefício e continuar acumulando novas recompensas.
+</p>
+
+<p>
+  Acesse seu cartão fidelidade digital para acompanhar seus pontos e benefícios:
+</p>
+
+<p>
+  <a href="<%= @portal_url %>"><%= @portal_url %></a>
+</p>
+
+<p>
+  Até breve!<br>
+  Equipe <%= @barbershop.name %>
+</p>
+
+<hr>
+
+<p style="font-size: 12px; color: #666;">
+  Powered by Fideli
+</p>
