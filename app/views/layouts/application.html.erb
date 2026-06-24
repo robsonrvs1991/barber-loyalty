@@ -19,7 +19,7 @@
 
           <div class="navbar-nav ms-auto">
             <span class="navbar-text text-white-50 me-3">Meu cartão fidelidade</span>
-            <%= button_to "Sair", cliente_logout_path, method: :delete, class: "btn btn-sm btn-outline-light" rescue nil %>
+            <%= button_to "Sair", client_logout_path, method: :delete, class: "btn btn-sm btn-outline-light" %>
           </div>
         <% elsif logged_in? && barber? %>
           <%= link_to "Fideli", root_path, class: "navbar-brand fw-semibold" %>
