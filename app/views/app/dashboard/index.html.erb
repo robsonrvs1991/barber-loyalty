@@ -1,70 +1,238 @@
-<h1><%= @barbershop.name %></h1>
+<div class="mb-4">
+  <div class="p-4 p-md-5 rounded-4 shadow-sm bg-white border">
+    <div class="d-flex flex-column flex-lg-row justify-content-between gap-3">
+      <div>
+        <p class="text-muted mb-1">Painel da empresa</p>
+        <h1 class="display-6 fw-bold mb-2">
+          Olá, <%= @barbershop.name %> 👋
+        </h1>
+        <p class="lead text-muted mb-0">
+          Acompanhe clientes, atendimentos e recompensas do seu programa de fidelidade.
+        </p>
+      </div>
 
-<h2>Painel da empresa</h2>
+      <div class="text-lg-end">
+        <span class="badge text-bg-light border mb-2 px-3 py-2">
+          <%= l(Time.zone.today, format: :long) rescue Time.zone.today.strftime("%d/%m/%Y") %>
+        </span>
 
-<div>
-  <p><strong>Plano:</strong> Free</p>
-  <p><strong>Trial:</strong> 30 dias</p>
-  <p><strong>Mensalidade após o trial:</strong> R$ 19,90</p>
+        <div>
+          <% if @subscription.present? %>
+            <span class="badge text-bg-<%= @subscription.active? ? "success" : "secondary" %> px-3 py-2">
+              <%= @subscription.status_label %>
+            </span>
+          <% else %>
+            <span class="badge text-bg-secondary px-3 py-2">Sem assinatura</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<hr>
+<div class="row g-3 mb-4">
+  <div class="col-md-6 col-xl-3">
+    <div class="card loy-card h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <p class="text-muted mb-1">Clientes</p>
+            <div class="h1 fw-bold mb-0"><%= @customers_count %></div>
+          </div>
+          <div class="rounded-4 bg-primary bg-opacity-10 text-primary p-3 fs-2">👥</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<h3>Resumo</h3>
+  <div class="col-md-6 col-xl-3">
+    <div class="card loy-card h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <p class="text-muted mb-1">Atendimentos</p>
+            <div class="h1 fw-bold mb-0"><%= @appointments_count %></div>
+          </div>
+          <div class="rounded-4 bg-info bg-opacity-10 text-info p-3 fs-2">✂️</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<table>
-  <tr>
-    <td><strong>Clientes</strong></td>
-    <td><%= @customers_count %></td>
-  </tr>
-  <tr>
-    <td><strong>Atendimentos</strong></td>
-    <td><%= @appointments_count %></td>
-  </tr>
-  <tr>
-    <td><strong>Recompensas</strong></td>
-    <td><%= @rewards_count %></td>
-  </tr>
-  <tr>
-    <td><strong>Disponíveis</strong></td>
-    <td><%= @available_rewards_count %></td>
-  </tr>
-</table>
+  <div class="col-md-6 col-xl-3">
+    <div class="card loy-card h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <p class="text-muted mb-1">Disponíveis</p>
+            <div class="h1 fw-bold mb-0"><%= @available_rewards_count %></div>
+          </div>
+          <div class="rounded-4 bg-warning bg-opacity-10 text-warning p-3 fs-2">🎁</div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<hr>
+  <div class="col-md-6 col-xl-3">
+    <div class="card loy-card h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <p class="text-muted mb-1">Resgatadas</p>
+            <div class="h1 fw-bold mb-0"><%= @used_rewards_count %></div>
+          </div>
+          <div class="rounded-4 bg-success bg-opacity-10 text-success p-3 fs-2">✅</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<h3>Ações rápidas</h3>
+<div class="card loy-card mb-4">
+  <div class="card-body p-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <div>
+        <h2 class="h4 mb-1">Ações rápidas</h2>
+        <p class="text-muted mb-0">As principais ações do dia a dia do seu negócio.</p>
+      </div>
+    </div>
 
-<p><%= link_to "Cadastrar cliente", new_customer_path %></p>
-<p><%= link_to "Registrar atendimento", new_appointment_path %></p>
-<p><%= link_to "Cadastrar serviço", new_service_path %></p>
-<p><%= link_to "Configurar fidelidade", loyalty_program_path %></p>
+    <div class="row g-3">
+      <div class="col-md-6 col-xl-3">
+        <%= link_to new_customer_path, class: "text-decoration-none" do %>
+          <div class="border rounded-4 p-4 h-100 bg-light">
+            <div class="fs-1 mb-2">👤</div>
+            <h3 class="h6 text-dark mb-1">Novo cliente</h3>
+            <p class="text-muted small mb-0">Cadastrar cliente no programa</p>
+          </div>
+        <% end %>
+      </div>
 
-<hr>
+      <div class="col-md-6 col-xl-3">
+        <%= link_to new_appointment_path, class: "text-decoration-none" do %>
+          <div class="border rounded-4 p-4 h-100 bg-light">
+            <div class="fs-1 mb-2">✂️</div>
+            <h3 class="h6 text-dark mb-1">Registrar atendimento</h3>
+            <p class="text-muted small mb-0">Adicionar pontos ao cliente</p>
+          </div>
+        <% end %>
+      </div>
 
-<h3>Últimos atendimentos</h3>
+      <div class="col-md-6 col-xl-3">
+        <%= link_to rewards_path, class: "text-decoration-none" do %>
+          <div class="border rounded-4 p-4 h-100 bg-light">
+            <div class="fs-1 mb-2">🎁</div>
+            <h3 class="h6 text-dark mb-1">Resgatar recompensa</h3>
+            <p class="text-muted small mb-0">Validar código apresentado</p>
+          </div>
+        <% end %>
+      </div>
 
-<% if @latest_appointments.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Cliente</th>
-        <th>Serviço</th>
-        <th>Pontos</th>
-        <th>Data</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @latest_appointments.each do |appointment| %>
-        <tr>
-          <td><%= appointment.customer.name %></td>
-          <td><%= appointment.service.name %></td>
-          <td><%= appointment.points %></td>
-          <td><%= l appointment.created_at, format: :short %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>Nenhum atendimento registrado.</p>
-<% end %>
+      <div class="col-md-6 col-xl-3">
+        <%= link_to loyalty_program_path, class: "text-decoration-none" do %>
+          <div class="border rounded-4 p-4 h-100 bg-light">
+            <div class="fs-1 mb-2">⭐</div>
+            <h3 class="h6 text-dark mb-1">Configurar fidelidade</h3>
+            <p class="text-muted small mb-0">Editar meta e recompensa</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card loy-card h-100">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="h4 mb-0">Últimos atendimentos</h2>
+          <%= link_to "Ver todos", appointments_path, class: "btn btn-sm btn-outline-primary" %>
+        </div>
+
+        <% if @latest_appointments.any? %>
+          <div class="list-group list-group-flush">
+            <% @latest_appointments.each do |appointment| %>
+              <div class="list-group-item px-0 py-3">
+                <div class="d-flex justify-content-between align-items-center gap-3">
+                  <div>
+                    <div class="fw-semibold"><%= appointment.customer&.name || "-" %></div>
+                    <div class="text-muted small"><%= appointment.service&.name || "-" %></div>
+                  </div>
+
+                  <div class="text-end">
+                    <span class="badge text-bg-primary mb-1">
+                      +<%= appointment.points || 0 %> ponto(s)
+                    </span>
+                    <div class="text-muted small">
+                      <%= l appointment.created_at, format: :short %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-5">
+            Nenhum atendimento registrado ainda.
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card loy-card mb-4">
+      <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h2 class="h4 mb-0">Recompensas pendentes</h2>
+          <%= link_to "Ver todas", rewards_path, class: "btn btn-sm btn-outline-primary" %>
+        </div>
+
+        <% if @latest_rewards.any? %>
+          <div class="list-group list-group-flush">
+            <% @latest_rewards.each do |reward| %>
+              <div class="list-group-item px-0 py-3">
+                <div class="d-flex justify-content-between align-items-center gap-3">
+                  <div>
+                    <div class="fw-semibold"><%= reward.customer&.name || "-" %></div>
+                    <div class="text-muted small"><%= reward.code %></div>
+                  </div>
+
+                  <%= link_to "Resgatar", reward_path(reward), class: "btn btn-sm btn-success" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="text-center text-muted py-4">
+            Nenhuma recompensa pendente.
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card loy-card">
+      <div class="card-body p-4">
+        <h2 class="h4 mb-3">Programa atual</h2>
+
+        <% if @loyalty_program.present? %>
+          <div class="border rounded-4 p-3 bg-light">
+            <p class="mb-2">
+              <strong>Meta:</strong>
+              <%= @loyalty_program.required_visits %> ponto(s)
+            </p>
+            <p class="mb-0">
+              <strong>Recompensa:</strong>
+              <%= @loyalty_program.reward_description %>
+            </p>
+          </div>
+        <% else %>
+          <p class="text-muted mb-0">
+            Nenhum programa configurado.
+          </p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
