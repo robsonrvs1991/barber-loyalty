@@ -42,3 +42,9 @@ program = LoyaltyProgram.find_or_initialize_by(barbershop: barbershop)
 program.required_visits = 10
 program.reward_description = "Corte grátis"
 program.save!
+
+User.find_or_create_by!(email: "SEU_EMAIL_AQUI") do |user|
+  user.name = "Robson"
+  user.role = "owner"
+  user.password = "123456"
+end
