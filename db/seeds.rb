@@ -43,7 +43,7 @@ program.required_visits = 10
 program.reward_description = "Corte grátis"
 program.save!
 
-User.find_or_create_by!(email: "SEU_EMAIL_AQUI") do |user|
+User.find_or_create_by!(email: "ldcmiudo@gmail.com") do |user|
   user.name = "Robson"
   user.role = "owner"
   user.password = "123456"
