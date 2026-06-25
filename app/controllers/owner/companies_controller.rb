@@ -3,13 +3,33 @@ module Owner
     before_action :set_company, only: [:show, :edit, :update, :destroy, :reset_owner_password]
 
     def index
+      @query = params[:q].to_s.strip
+
       @companies = Company.includes(:subscription, :users).order(created_at: :desc)
+
+      if @query.present?
+        @companies = @companies.where(
+          "name ILIKE :q OR legal_name ILIKE :q OR email ILIKE :q OR whatsapp ILIKE :q",
+          q: "%#{@query}%"
+        )
+      end
     end
 
     def show
       @owner_user = @company.owner_user
       @subscription = @company.subscription
+      @loyalty_program = @company.loyalty_program
+
       @customers_count = @company.users.where(role: "customer").count
+      @services_count = @company.services.count
+      @appointments_count = @company.appointments.count
+      @rewards_count = @company.rewards.count
+      @used_rewards_count = @company.rewards.where(used: true).count
+      @available_rewards_count = @company.rewards.where(used: false).count
+
+      @recent_customers = @company.users.where(role: "customer").order(created_at: :desc).limit(5)
+      @recent_appointments = @company.appointments.includes(:customer, :service).order(created_at: :desc).limit(5)
+      @recent_rewards = @company.rewards.includes(:customer).order(created_at: :desc).limit(5)
     end
 
     def new

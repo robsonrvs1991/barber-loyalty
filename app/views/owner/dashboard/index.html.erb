@@ -1,24 +1,117 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
     <h1 class="h3 mb-1">Painel Loy</h1>
-    <p class="text-muted mb-0">Controle de empresas, acessos e assinaturas.</p>
+    <p class="text-muted mb-0">Visão geral da operação, empresas, assinaturas e fidelidade.</p>
   </div>
 
   <%= link_to "Nova empresa", new_owner_company_path, class: "btn btn-primary" %>
 </div>
 
-<div class="row mb-4">
-  <div class="col-md-3 mb-3"><div class="card shadow-sm"><div class="card-body"><div class="text-muted">Empresas</div><div class="h2 mb-0"><%= @companies_count %></div></div></div></div>
-  <div class="col-md-3 mb-3"><div class="card shadow-sm"><div class="card-body"><div class="text-muted">Ativas</div><div class="h2 mb-0"><%= @active_subscriptions_count %></div></div></div></div>
-  <div class="col-md-3 mb-3"><div class="card shadow-sm"><div class="card-body"><div class="text-muted">Bloqueadas</div><div class="h2 mb-0"><%= @blocked_subscriptions_count %></div></div></div></div>
-  <div class="col-md-3 mb-3"><div class="card shadow-sm"><div class="card-body"><div class="text-muted">Free</div><div class="h2 mb-0"><%= @free_subscriptions_count %></div></div></div></div>
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Empresas</div>
+        <div class="h2 mb-0"><%= @companies_count %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Ativas</div>
+        <div class="h2 mb-0"><%= @active_subscriptions_count %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Bloqueadas</div>
+        <div class="h2 mb-0"><%= @blocked_subscriptions_count %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Free</div>
+        <div class="h2 mb-0"><%= @free_subscriptions_count %></div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div class="card shadow-sm">
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Clientes finais</div>
+        <div class="h2 mb-0"><%= @customers_count %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Atendimentos</div>
+        <div class="h2 mb-0"><%= @appointments_count %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Recompensas</div>
+        <div class="h2 mb-0"><%= @rewards_count %></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Resgatadas</div>
+        <div class="h2 mb-0"><%= @used_rewards_count %></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Receita mensal estimada</div>
+        <div class="h2 mb-0">
+          R$ <%= number_with_precision(@mrr, precision: 2, separator: ",", delimiter: ".") %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card loy-card">
+      <div class="card-body">
+        <div class="text-muted">Receita anual estimada</div>
+        <div class="h2 mb-0">
+          R$ <%= number_with_precision(@arr, precision: 2, separator: ",", delimiter: ".") %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card loy-card mb-4">
   <div class="card-body">
     <h2 class="h5 mb-3">Últimas empresas</h2>
 
-    <table class="table align-middle">
+    <table class="table align-middle mb-0">
       <thead>
         <tr>
           <th>Empresa</th>
@@ -28,14 +121,57 @@
           <th class="text-end"></th>
         </tr>
       </thead>
+
       <tbody>
         <% @companies.each do |company| %>
           <tr>
-            <td><%= company.name %></td>
+            <td class="fw-semibold"><%= company.name %></td>
             <td><%= company.owner_user&.email || "-" %></td>
             <td><%= company.subscription&.status_label || "Sem assinatura" %></td>
-            <td>R$ <%= number_with_precision(company.subscription&.price || 0, precision: 2) %></td>
-            <td class="text-end"><%= link_to "Ver", owner_company_path(company), class: "btn btn-sm btn-outline-primary" %></td>
+            <td>
+              R$ <%= number_with_precision(company.subscription&.price || 0, precision: 2, separator: ",", delimiter: ".") %>
+            </td>
+            <td class="text-end">
+              <%= link_to "Ver", owner_company_path(company), class: "btn btn-sm btn-outline-primary" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card loy-card">
+  <div class="card-body">
+    <h2 class="h5 mb-3">Últimas recompensas geradas</h2>
+
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Estabelecimento</th>
+          <th>Código</th>
+          <th>Status</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if @recent_rewards.any? %>
+          <% @recent_rewards.each do |reward| %>
+            <tr>
+              <td><%= reward.customer&.name || "-" %></td>
+              <td><%= reward.barbershop&.name || "-" %></td>
+              <td><strong><%= reward.code %></strong></td>
+              <td><%= reward.used? ? "Resgatada" : "Disponível" %></td>
+              <td><%= l(reward.created_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="5" class="text-center text-muted py-4">
+              Nenhuma recompensa gerada ainda.
+            </td>
           </tr>
         <% end %>
       </tbody>

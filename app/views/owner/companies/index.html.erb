@@ -1,32 +1,102 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="h3 mb-0">Empresas</h1>
+  <div>
+    <h1 class="h3 mb-1">Empresas</h1>
+    <p class="text-muted mb-0">Gerencie empresas, responsáveis, planos e status de acesso.</p>
+  </div>
+
   <%= link_to "Nova empresa", new_owner_company_path, class: "btn btn-primary" %>
 </div>
 
-<div class="card shadow-sm">
+<div class="card loy-card mb-4">
   <div class="card-body">
-    <table class="table align-middle">
-      <thead>
+    <%= form_with url: owner_companies_path, method: :get, local: true, class: "row g-3 align-items-end" do %>
+      <div class="col-md-9">
+        <label class="form-label fw-semibold">Buscar empresa</label>
+        <%= text_field_tag :q, @query, class: "form-control form-control-lg", placeholder: "Nome, razão social, e-mail ou WhatsApp" %>
+      </div>
+
+      <div class="col-md-3 d-grid">
+        <%= submit_tag "Buscar", class: "btn btn-loy btn-lg" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div class="card loy-card">
+  <div class="card-body p-0">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
         <tr>
           <th>Empresa</th>
-          <th>E-mail</th>
+          <th>Contato</th>
           <th>Responsável</th>
           <th>Status</th>
-          <th>Free</th>
+          <th>Plano</th>
           <th>Bloqueada</th>
-          <th class="text-end"></th>
+          <th class="text-end">Ação</th>
         </tr>
       </thead>
+
       <tbody>
-        <% @companies.each do |company| %>
+        <% if @companies.any? %>
+          <% @companies.each do |company| %>
+            <% subscription = company.subscription %>
+
+            <tr>
+              <td>
+                <div class="fw-semibold"><%= company.name %></div>
+                <div class="text-muted small"><%= company.legal_name.presence || "Sem razão social" %></div>
+              </td>
+
+              <td>
+                <div><%= company.email.presence || "-" %></div>
+                <div class="text-muted small"><%= company.whatsapp.presence || company.phone.presence || "-" %></div>
+              </td>
+
+              <td>
+                <div><%= company.owner_user&.name || "-" %></div>
+                <div class="text-muted small"><%= company.owner_user&.email || "-" %></div>
+              </td>
+
+              <td>
+                <% if subscription.present? %>
+                  <% if subscription.blocked? %>
+                    <span class="badge text-bg-danger">Bloqueada</span>
+                  <% elsif subscription.active? %>
+                    <span class="badge text-bg-success"><%= subscription.status_label %></span>
+                  <% else %>
+                    <span class="badge text-bg-secondary"><%= subscription.status_label %></span>
+                  <% end %>
+                <% else %>
+                  <span class="badge text-bg-secondary">Sem assinatura</span>
+                <% end %>
+              </td>
+
+              <td>
+                <% if subscription.present? %>
+                  <div><%= subscription.plan.presence || "-" %></div>
+                  <div class="text-muted small">
+                    R$ <%= number_with_precision(subscription.price || 0, precision: 2, separator: ",", delimiter: ".") %>
+                  </div>
+                <% else %>
+                  -
+                <% end %>
+              </td>
+
+              <td>
+                <%= subscription&.blocked? ? "Sim" : "Não" %>
+              </td>
+
+              <td class="text-end">
+                <%= link_to "Ver empresa", owner_company_path(company), class: "btn btn-sm btn-outline-primary" %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
           <tr>
-            <td><%= company.name %></td>
-            <td><%= company.email %></td>
-            <td><%= company.owner_user&.email || "-" %></td>
-            <td><%= company.subscription&.status_label || "Sem assinatura" %></td>
-            <td><%= company.subscription&.free? ? "Sim" : "Não" %></td>
-            <td><%= company.subscription&.blocked? ? "Sim" : "Não" %></td>
-            <td class="text-end"><%= link_to "Ver", owner_company_path(company), class: "btn btn-sm btn-outline-primary" %></td>
+            <td colspan="7" class="text-center text-muted py-5">
+              Nenhuma empresa encontrada.
+            </td>
           </tr>
         <% end %>
       </tbody>

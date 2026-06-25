@@ -1,46 +1,264 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <div>
     <h1 class="h3 mb-1"><%= @company.name %></h1>
-    <p class="text-muted mb-0"><%= @company.legal_name %></p>
+    <p class="text-muted mb-0"><%= @company.legal_name.presence || "Visão 360° da empresa" %></p>
   </div>
 
   <div class="d-flex gap-2">
     <%= link_to "Editar", edit_owner_company_path(@company), class: "btn btn-outline-primary" %>
-    <%= button_to "Resetar senha do responsável", reset_owner_password_owner_company_path(@company), method: :patch, class: "btn btn-outline-warning" %>
+
+    <%= button_to "Resetar senha",
+                  reset_owner_password_owner_company_path(@company),
+                  method: :patch,
+                  data: { turbo_confirm: "Deseja resetar a senha do responsável desta empresa?" },
+                  class: "btn btn-outline-warning" %>
   </div>
 </div>
 
-<div class="row">
-  <div class="col-md-4 mb-3">
-    <div class="card shadow-sm h-100">
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card loy-card h-100">
       <div class="card-body">
-        <h2 class="h5">Empresa</h2>
-        <p class="mb-1"><strong>E-mail:</strong> <%= @company.email.presence || "-" %></p>
-        <p class="mb-1"><strong>WhatsApp:</strong> <%= @company.whatsapp.presence || "-" %></p>
-        <p class="mb-0"><strong>Clientes:</strong> <%= @customers_count %></p>
+        <div class="text-muted">Clientes</div>
+        <div class="h2 mb-0"><%= @customers_count %></div>
       </div>
     </div>
   </div>
 
-  <div class="col-md-4 mb-3">
-    <div class="card shadow-sm h-100">
+  <div class="col-md-3">
+    <div class="card loy-card h-100">
       <div class="card-body">
-        <h2 class="h5">Responsável</h2>
-        <p class="mb-1"><strong>Nome:</strong> <%= @owner_user&.name || "-" %></p>
-        <p class="mb-1"><strong>E-mail:</strong> <%= @owner_user&.email || "-" %></p>
-        <p class="mb-0"><strong>Telefone:</strong> <%= @owner_user&.phone || "-" %></p>
+        <div class="text-muted">Atendimentos</div>
+        <div class="h2 mb-0"><%= @appointments_count %></div>
       </div>
     </div>
   </div>
 
-  <div class="col-md-4 mb-3">
-    <div class="card shadow-sm h-100">
+  <div class="col-md-3">
+    <div class="card loy-card h-100">
       <div class="card-body">
-        <h2 class="h5">Assinatura</h2>
-        <p class="mb-1"><strong>Status:</strong> <%= @subscription&.status_label || "-" %></p>
-        <p class="mb-1"><strong>Valor:</strong> R$ <%= number_with_precision(@subscription&.price || 0, precision: 2) %></p>
-        <p class="mb-0"><strong>Trial até:</strong> <%= @subscription&.trial_until ? l(@subscription.trial_until, format: :short) : "-" %></p>
+        <div class="text-muted">Recompensas</div>
+        <div class="h2 mb-0"><%= @rewards_count %></div>
       </div>
+    </div>
+  </div>
+
+  <div class="col-md-3">
+    <div class="card loy-card h-100">
+      <div class="card-body">
+        <div class="text-muted">Resgatadas</div>
+        <div class="h2 mb-0"><%= @used_rewards_count %></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4">
+    <div class="card loy-card h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Empresa</h2>
+
+        <p class="mb-2"><strong>E-mail:</strong><br><%= @company.email.presence || "-" %></p>
+        <p class="mb-2"><strong>WhatsApp:</strong><br><%= @company.whatsapp.presence || "-" %></p>
+        <p class="mb-2"><strong>Telefone:</strong><br><%= @company.phone.presence || "-" %></p>
+        <p class="mb-0"><strong>Endereço:</strong><br><%= @company.address.presence || "-" %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card loy-card h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Responsável</h2>
+
+        <p class="mb-2"><strong>Nome:</strong><br><%= @owner_user&.name || "-" %></p>
+        <p class="mb-2"><strong>E-mail:</strong><br><%= @owner_user&.email || "-" %></p>
+        <p class="mb-0"><strong>Telefone:</strong><br><%= @owner_user&.phone || "-" %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4">
+    <div class="card loy-card h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Assinatura</h2>
+
+        <p class="mb-2">
+          <strong>Status:</strong><br>
+          <span class="badge text-bg-<%= @subscription&.active? ? "success" : "secondary" %>">
+            <%= @subscription&.status_label || "Sem assinatura" %>
+          </span>
+        </p>
+
+        <p class="mb-2">
+          <strong>Plano:</strong><br>
+          <%= @subscription&.plan.presence || "-" %>
+        </p>
+
+        <p class="mb-2">
+          <strong>Valor:</strong><br>
+          R$ <%= number_with_precision(@subscription&.price || 0, precision: 2, separator: ",", delimiter: ".") %>
+        </p>
+
+        <p class="mb-0">
+          <strong>Trial até:</strong><br>
+          <%= @subscription&.trial_until ? l(@subscription.trial_until, format: :short) : "-" %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-6">
+    <div class="card loy-card h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Programa de Fidelidade</h2>
+
+        <% if @loyalty_program.present? %>
+          <p class="mb-2"><strong>Meta:</strong><br><%= @loyalty_program.required_visits %> ponto(s)</p>
+          <p class="mb-0"><strong>Recompensa:</strong><br><%= @loyalty_program.reward_description %></p>
+        <% else %>
+          <p class="text-muted mb-0">Nenhum programa de fidelidade configurado.</p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card loy-card h-100">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Resumo de Recompensas</h2>
+
+        <p class="mb-2"><strong>Disponíveis:</strong> <%= @available_rewards_count %></p>
+        <p class="mb-2"><strong>Resgatadas:</strong> <%= @used_rewards_count %></p>
+        <p class="mb-0"><strong>Total gerado:</strong> <%= @rewards_count %></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card loy-card mb-4">
+  <div class="card-body">
+    <h2 class="h5 mb-3">Últimos clientes</h2>
+
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>E-mail</th>
+          <th>Telefone</th>
+          <th>Criado em</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if @recent_customers.any? %>
+          <% @recent_customers.each do |customer| %>
+            <tr>
+              <td><%= customer.name %></td>
+              <td><%= customer.email %></td>
+              <td><%= customer.phone.presence || "-" %></td>
+              <td><%= l(customer.created_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="4" class="text-center text-muted py-4">Nenhum cliente cadastrado.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card loy-card mb-4">
+  <div class="card-body">
+    <h2 class="h5 mb-3">Últimos atendimentos</h2>
+
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Serviço</th>
+          <th>Pontos</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if @recent_appointments.any? %>
+          <% @recent_appointments.each do |appointment| %>
+            <tr>
+              <td><%= appointment.customer&.name || "-" %></td>
+              <td><%= appointment.service&.name || "-" %></td>
+              <td><%= appointment.points || 0 %></td>
+              <td><%= l(appointment.created_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="4" class="text-center text-muted py-4">Nenhum atendimento registrado.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card loy-card mb-4">
+  <div class="card-body">
+    <h2 class="h5 mb-3">Últimas recompensas</h2>
+
+    <table class="table align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Recompensa</th>
+          <th>Código</th>
+          <th>Status</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if @recent_rewards.any? %>
+          <% @recent_rewards.each do |reward| %>
+            <tr>
+              <td><%= reward.customer&.name || "-" %></td>
+              <td><%= reward.description %></td>
+              <td><strong><%= reward.code %></strong></td>
+              <td><%= reward.used? ? "Resgatada" : "Disponível" %></td>
+              <td><%= l(reward.created_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="5" class="text-center text-muted py-4">Nenhuma recompensa gerada.</td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card loy-card border-warning">
+  <div class="card-body">
+    <h2 class="h5 mb-3">Ações administrativas</h2>
+
+    <p class="text-muted">
+      Área reservada para suporte da Loy. As próximas ações sensíveis deverão exigir confirmação e, futuramente, registro de auditoria.
+    </p>
+
+    <div class="d-flex flex-wrap gap-2">
+      <%= link_to "Editar empresa", edit_owner_company_path(@company), class: "btn btn-outline-primary" %>
+
+      <%= button_to "Resetar senha do responsável",
+                    reset_owner_password_owner_company_path(@company),
+                    method: :patch,
+                    data: { turbo_confirm: "Confirmar reset de senha do responsável?" },
+                    class: "btn btn-outline-warning" %>
     </div>
   </div>
 </div>

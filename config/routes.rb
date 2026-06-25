@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  root "dashboard#index"
+  get "landing/index"
+  root "landing#index"
 
   get    "/login",  to: "sessions#new",     as: :login
   post   "/login",  to: "sessions#create"
@@ -12,8 +13,19 @@ Rails.application.routes.draw do
 
   get "/assinatura/bloqueada", to: "subscriptions#blocked", as: :subscription_blocked
 
+  namespace :public do
+    resource :registration, only: [:new, :create]
+  end
+
+  get "cadastre-se", to: "public/registrations#new", as: :signup
+
+  namespace :app do
+    get "/", to: "dashboard#index", as: :dashboard
+  end
+
   namespace :owner do
     get "/", to: "dashboard#index", as: :dashboard
+
     resources :companies do
       member do
         patch :reset_owner_password
@@ -26,7 +38,7 @@ Rails.application.routes.draw do
   resources :services
   resource :loyalty_program, only: [:show, :edit, :update]
   resources :appointments, only: [:index, :new, :create, :show]
-  resources :rewards, only: [:index, :update]
+  resources :rewards, only: [:index, :show, :update]
 
   get "up" => "rails/health#show", as: :rails_health_check
 end

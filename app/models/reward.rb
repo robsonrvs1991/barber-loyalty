@@ -1,50 +1,41 @@
 class Reward < ApplicationRecord
-  belongs_to :customer, class_name: "User"
   belongs_to :barbershop
+  belongs_to :customer, class_name: "User"
 
-  scope :available, -> { where(used: [false, nil]) }
-  scope :used, -> { where(used: true) }
+  before_validation :generate_code, on: :create
 
-  def used?
-    used == true
-  end
+  validates :code, presence: true, uniqueness: true
 
   def self.create_if_earned!(customer, barbershop)
-    loyalty_program = barbershop.loyalty_program
-    return unless loyalty_program.present?
+  loyalty_program = barbershop.loyalty_program
+  return unless loyalty_program
 
-    required_points = loyalty_program.required_visits.to_i
-    return if required_points <= 0
+  required_points = loyalty_program.required_visits
 
-    points = customer.loyalty_points.to_i
-    return if points < required_points
+  total_points = barbershop.appointments.where(customer: customer).sum(:points)
+  rewards_count = barbershop.rewards.where(customer: customer).count
 
-    earned_rewards_count = points / required_points
-    existing_rewards_count = customer.rewards.where(barbershop: barbershop).count
+  already_used_points = rewards_count * required_points
 
-    return if existing_rewards_count >= earned_rewards_count
+  return if total_points < already_used_points + required_points
 
-    reward = create!(
-      customer: customer,
-      barbershop: barbershop,
-      description: loyalty_program.reward_description.presence || "Recompensa disponível",
-      used: false
-    )
+  create!(
+    barbershop: barbershop,
+    customer: customer,
+    description: loyalty_program.reward_description,
+    used: false,
+    earned_at: Time.current
+  )
+end
 
-    notify_customer_if_configured(reward)
+  private
 
-    reward
-  end
+  def generate_code
+    return if code.present?
 
-  def self.notify_customer_if_configured(reward)
-    return if reward.customer.email.blank?
-    return if ENV["SMTP_ADDRESS"].blank?
-
-    RewardMailer.with(
-      reward: reward,
-      portal_url: "#{ENV.fetch("APP_URL", "http://localhost:3000")}/cliente/login"
-    ).reward_available.deliver_now
-  rescue StandardError => e
-    Rails.logger.error("[RewardMailer] Falha ao enviar e-mail: #{e.class} - #{e.message}")
+    loop do
+      self.code = "LOY-#{SecureRandom.alphanumeric(6).upcase}"
+      break unless Reward.exists?(code: code)
+    end
   end
 end

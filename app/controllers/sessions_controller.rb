@@ -10,6 +10,8 @@ class SessionsController < ApplicationController
 
       if user.role == "owner"
         redirect_to owner_dashboard_path, notice: "Login realizado com sucesso."
+      elsif user.role.in?(["business", "barber"])
+        redirect_to app_dashboard_path, notice: "Login realizado com sucesso."
       else
         redirect_to root_path, notice: "Login realizado com sucesso."
       end

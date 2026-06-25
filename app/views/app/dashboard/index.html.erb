@@ -1,0 +1,70 @@
+<h1><%= @barbershop.name %></h1>
+
+<h2>Painel da empresa</h2>
+
+<div>
+  <p><strong>Plano:</strong> Free</p>
+  <p><strong>Trial:</strong> 30 dias</p>
+  <p><strong>Mensalidade após o trial:</strong> R$ 19,90</p>
+</div>
+
+<hr>
+
+<h3>Resumo</h3>
+
+<table>
+  <tr>
+    <td><strong>Clientes</strong></td>
+    <td><%= @customers_count %></td>
+  </tr>
+  <tr>
+    <td><strong>Atendimentos</strong></td>
+    <td><%= @appointments_count %></td>
+  </tr>
+  <tr>
+    <td><strong>Recompensas</strong></td>
+    <td><%= @rewards_count %></td>
+  </tr>
+  <tr>
+    <td><strong>Disponíveis</strong></td>
+    <td><%= @available_rewards_count %></td>
+  </tr>
+</table>
+
+<hr>
+
+<h3>Ações rápidas</h3>
+
+<p><%= link_to "Cadastrar cliente", new_customer_path %></p>
+<p><%= link_to "Registrar atendimento", new_appointment_path %></p>
+<p><%= link_to "Cadastrar serviço", new_service_path %></p>
+<p><%= link_to "Configurar fidelidade", loyalty_program_path %></p>
+
+<hr>
+
+<h3>Últimos atendimentos</h3>
+
+<% if @latest_appointments.any? %>
+  <table>
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Serviço</th>
+        <th>Pontos</th>
+        <th>Data</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @latest_appointments.each do |appointment| %>
+        <tr>
+          <td><%= appointment.customer.name %></td>
+          <td><%= appointment.service.name %></td>
+          <td><%= appointment.points %></td>
+          <td><%= l appointment.created_at, format: :short %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>Nenhum atendimento registrado.</p>
+<% end %>

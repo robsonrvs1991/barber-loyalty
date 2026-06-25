@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_25_162503) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_25_184025) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_162503) do
 
   create_table "rewards", force: :cascade do |t|
     t.bigint "barbershop_id", null: false
+    t.string "code"
     t.datetime "created_at", null: false
     t.bigint "customer_id"
     t.string "description"
@@ -60,6 +61,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_25_162503) do
     t.boolean "used"
     t.datetime "used_at"
     t.index ["barbershop_id"], name: "index_rewards_on_barbershop_id"
+    t.index ["code"], name: "index_rewards_on_code", unique: true
   end
 
   create_table "services", force: :cascade do |t|

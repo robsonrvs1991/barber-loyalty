@@ -1,0 +1,77 @@
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card loy-card">
+      <div class="card-body p-4 p-md-5">
+
+        <div class="d-flex justify-content-between align-items-start mb-4">
+          <div>
+            <p class="text-muted mb-1">Validação de recompensa</p>
+            <h1 class="h3 mb-0"><%= @reward.description %></h1>
+          </div>
+
+          <% if @reward.used? %>
+            <span class="badge text-bg-secondary fs-6">Utilizada</span>
+          <% else %>
+            <span class="badge text-bg-success fs-6">Disponível</span>
+          <% end %>
+        </div>
+
+        <div class="bg-light rounded-4 p-4 text-center mb-4">
+          <p class="text-muted mb-2">Código da recompensa</p>
+          <div class="display-5 fw-bold text-primary">
+            <%= @reward.code %>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <div class="border rounded-4 p-3 h-100">
+              <p class="text-muted mb-1">Cliente</p>
+              <p class="fw-semibold mb-0"><%= @reward.customer.name %></p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="border rounded-4 p-3 h-100">
+              <p class="text-muted mb-1">Gerada em</p>
+              <p class="fw-semibold mb-0">
+                <%= l(@reward.earned_at || @reward.created_at, format: :long) %>
+              </p>
+            </div>
+          </div>
+
+          <% if @reward.used? && @reward.used_at.present? %>
+            <div class="col-md-12">
+              <div class="border rounded-4 p-3 h-100">
+                <p class="text-muted mb-1">Utilizada em</p>
+                <p class="fw-semibold mb-0">
+                  <%= l(@reward.used_at, format: :long) %>
+                </p>
+              </div>
+            </div>
+          <% end %>
+        </div>
+
+        <% unless @reward.used? %>
+          <div class="alert alert-warning border-0 rounded-4">
+            Confirme o resgate somente quando o cliente estiver na empresa para utilizar a recompensa.
+          </div>
+
+          <%= button_to "Confirmar resgate da recompensa",
+                        reward_path(@reward),
+                        method: :patch,
+                        data: { turbo_confirm: "Confirmar o uso desta recompensa?" },
+                        class: "btn btn-success btn-lg w-100" %>
+        <% else %>
+          <div class="alert alert-secondary border-0 rounded-4 mb-0">
+            Esta recompensa já foi utilizada e não pode ser resgatada novamente.
+          </div>
+        <% end %>
+      </div>
+
+      <div class="card-footer bg-white border-0 px-4 px-md-5 pb-4">
+        <%= link_to "← Voltar para recompensas", rewards_path, class: "btn btn-outline-secondary" %>
+      </div>
+    </div>
+  </div>
+</div>

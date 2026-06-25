@@ -1,19 +1,69 @@
-<h1>Recompensas</h1>
-<table class="table table-striped bg-white">
-<thead><tr><th>Cliente</th><th>Recompensa</th><th>Status</th><th>Gerada em</th><th></th></tr></thead>
-<tbody>
-<% @rewards.each do |reward| %>
-<tr>
-  <td><%= reward.customer.name %></td>
-  <td><%= reward.description %></td>
-  <td><%= reward.used ? "Utilizada" : "Disponível" %></td>
-  <td><%= l((reward.earned_at || reward.created_at), format: :short) %></td>
-  <td>
-    <% unless reward.used %>
-      <%= button_to "Marcar como utilizada", reward_path(reward), method: :patch, class: "btn btn-sm btn-success" %>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1">Recompensas</h1>
+    <p class="text-muted mb-0">Consulte, valide e resgate recompensas dos clientes.</p>
+  </div>
+</div>
+
+<div class="card loy-card mb-4">
+  <div class="card-body">
+    <%= form_with url: rewards_path, method: :get, local: true, class: "row g-3 align-items-end" do %>
+      <div class="col-md-8">
+        <label class="form-label fw-semibold">Buscar por código</label>
+        <%= text_field_tag :code, @code, class: "form-control form-control-lg", placeholder: "Ex: LOY-GCKJRZ" %>
+      </div>
+
+      <div class="col-md-4 d-grid">
+        <%= submit_tag "Buscar recompensa", class: "btn btn-loy btn-lg" %>
+      </div>
     <% end %>
-  </td>
-</tr>
-<% end %>
-</tbody>
-</table>
+  </div>
+</div>
+
+<div class="card loy-card">
+  <div class="card-body p-0">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>Cliente</th>
+          <th>Recompensa</th>
+          <th>Código</th>
+          <th>Status</th>
+          <th>Gerada em</th>
+          <th class="text-end">Ação</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% if @rewards.any? %>
+          <% @rewards.each do |reward| %>
+            <tr>
+              <td class="fw-semibold"><%= reward.customer.name %></td>
+              <td><%= reward.description %></td>
+              <td>
+                <span class="badge text-bg-dark fs-6"><%= reward.code %></span>
+              </td>
+              <td>
+                <% if reward.used? %>
+                  <span class="badge text-bg-secondary">Utilizada</span>
+                <% else %>
+                  <span class="badge text-bg-success">Disponível</span>
+                <% end %>
+              </td>
+              <td><%= l((reward.earned_at || reward.created_at), format: :short) %></td>
+              <td class="text-end">
+                <%= link_to "Ver / Resgatar", reward_path(reward), class: "btn btn-sm btn-primary" %>
+              </td>
+            </tr>
+          <% end %>
+        <% else %>
+          <tr>
+            <td colspan="6" class="text-center text-muted py-5">
+              Nenhuma recompensa encontrada.
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

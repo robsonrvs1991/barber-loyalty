@@ -1,0 +1,58 @@
+<h1>Cadastre sua empresa</h1>
+
+<p>Crie sua conta para começar a usar o Loy.</p>
+
+<%= form_with url: public_registration_path, method: :post do |form| %>
+
+  <div>
+    <%= form.label :company_name, "Nome da empresa" %><br>
+    <%= form.text_field :company_name, required: true %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= form.label :company_phone, "WhatsApp da empresa" %><br>
+    <%= form.telephone_field :company_phone, required: true %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= form.label :owner_name, "Nome do responsável" %><br>
+    <%= form.text_field :owner_name, required: true %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= form.label :owner_email, "E-mail do responsável" %><br>
+    <%= form.email_field :owner_email, required: true %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= form.label :owner_phone, "WhatsApp do responsável" %><br>
+    <%= form.telephone_field :owner_phone, required: true %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= form.label :password, "Senha" %><br>
+    <%= form.password_field :password, required: true %>
+  </div>
+
+  <br>
+
+  <div>
+    <%= form.label :password_confirmation, "Confirmar senha" %><br>
+    <%= form.password_field :password_confirmation, required: true %>
+  </div>
+
+  <br>
+
+  <%= form.submit "Criar minha conta" %>
+
+<% end %>
