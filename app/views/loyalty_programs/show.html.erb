@@ -1,8 +1,105 @@
-<div class="card">
-  <div class="card-body">
-    <h1>Programa de fidelidade</h1>
-    <p><strong>Meta:</strong> <%= @loyalty_program.required_visits %> ponto(s)</p>
-    <p><strong>Recompensa:</strong> <%= @loyalty_program.reward_description %></p>
-    <%= link_to "Editar", edit_loyalty_program_path, class: "btn btn-primary" %>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <p class="text-muted mb-1">Configuração de fidelidade</p>
+    <h1 class="h3 mb-0">Programa de fidelidade</h1>
+  </div>
+
+  <%= link_to "Editar programa", edit_loyalty_program_path, class: "btn btn-primary" %>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="card loy-card h-100">
+      <div class="card-body p-4 p-md-5">
+        <div class="d-flex align-items-start gap-3 mb-4">
+          <div class="rounded-4 bg-primary bg-opacity-10 text-primary p-3 fs-2">
+            ⭐
+          </div>
+
+          <div>
+            <h2 class="h4 mb-2">Programa geral</h2>
+            <p class="text-muted mb-0">
+              Este é o programa principal do estabelecimento. Por enquanto, todos os itens/serviços ativos podem somar pontos para esta regra.
+            </p>
+          </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+          <div class="col-md-6">
+            <div class="border rounded-4 p-4 h-100 bg-light">
+              <p class="text-muted mb-2">Meta para recompensa</p>
+              <div class="display-6 fw-bold mb-1">
+                <%= @loyalty_program.required_visits %>
+              </div>
+              <p class="mb-0 text-muted">ponto(s)</p>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="border rounded-4 p-4 h-100 bg-light">
+              <p class="text-muted mb-2">Recompensa entregue</p>
+              <div class="h3 fw-bold mb-1">
+                <%= @loyalty_program.reward_description %>
+              </div>
+              <p class="mb-0 text-muted">quando atingir a meta</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="alert alert-info border-0 rounded-4 mb-0">
+          Futuramente você poderá criar vários programas, como:
+          <strong>Corte</strong>, <strong>Barba</strong>, <strong>Produto</strong>, <strong>Combo</strong> ou qualquer item vendido pelo estabelecimento.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card loy-card mb-4">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">Como funciona hoje</h2>
+
+        <div class="d-flex gap-3 mb-3">
+          <div class="fw-bold text-primary">1</div>
+          <div>
+            <div class="fw-semibold">Cliente compra ou realiza serviço</div>
+            <div class="text-muted small">A empresa registra o atendimento.</div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3 mb-3">
+          <div class="fw-bold text-primary">2</div>
+          <div>
+            <div class="fw-semibold">Pontos são acumulados</div>
+            <div class="text-muted small">Cada item/serviço pode gerar pontos.</div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-3">
+          <div class="fw-bold text-primary">3</div>
+          <div>
+            <div class="fw-semibold">Recompensa é liberada</div>
+            <div class="text-muted small">Ao atingir a meta, o código é gerado.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card loy-card">
+      <div class="card-body p-4">
+        <h2 class="h5 mb-3">Próxima evolução</h2>
+
+        <p class="text-muted mb-3">
+          O Loy será preparado para múltiplos programas por estabelecimento.
+        </p>
+
+        <ul class="text-muted mb-0">
+          <li>Programa por item/serviço</li>
+          <li>Metas diferentes</li>
+          <li>Recompensas diferentes</li>
+          <li>Regras por produto ou venda</li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>

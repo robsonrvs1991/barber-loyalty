@@ -1,9 +1,49 @@
-<h1>Editar programa de fidelidade</h1>
-<div class="card"><div class="card-body">
-<%= form_with model: @loyalty_program, url: loyalty_program_path do |form| %>
-  <% if @loyalty_program.errors.any? %><div class="alert alert-danger"><%= @loyalty_program.errors.full_messages.join(', ') %></div><% end %>
-  <div class="mb-3"><%= form.label :required_visits, "Quantidade de pontos para ganhar", class: "form-label" %><%= form.number_field :required_visits, class: "form-control" %></div>
-  <div class="mb-3"><%= form.label :reward_description, "Recompensa", class: "form-label" %><%= form.text_field :reward_description, class: "form-control", placeholder: "Ex: Corte grátis" %></div>
-  <%= form.submit "Salvar", class: "btn btn-primary" %> <%= link_to "Voltar", loyalty_program_path, class: "btn btn-outline-secondary" %>
-<% end %>
-</div></div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <p class="text-muted mb-1">Configuração de fidelidade</p>
+    <h1 class="h3 mb-0">Editar programa geral</h1>
+  </div>
+
+  <%= link_to "Voltar", loyalty_program_path, class: "btn btn-outline-secondary" %>
+</div>
+
+<div class="row justify-content-center">
+  <div class="col-lg-8">
+    <div class="card loy-card">
+      <div class="card-body p-4 p-md-5">
+        <%= form_with model: @loyalty_program, url: loyalty_program_path do |form| %>
+          <% if @loyalty_program.errors.any? %>
+            <div class="alert alert-danger border-0 rounded-4">
+              <%= @loyalty_program.errors.full_messages.join(", ") %>
+            </div>
+          <% end %>
+
+          <div class="mb-4">
+            <%= form.label :required_visits, "Quantidade de pontos para ganhar", class: "form-label fw-semibold" %>
+            <%= form.number_field :required_visits, class: "form-control form-control-lg", min: 1 %>
+            <div class="form-text">
+              Exemplo: se colocar 10, o cliente ganhará uma recompensa ao acumular 10 pontos.
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <%= form.label :reward_description, "Descrição da recompensa", class: "form-label fw-semibold" %>
+            <%= form.text_field :reward_description, class: "form-control form-control-lg", placeholder: "Ex: Corte grátis, Produto grátis, 10% de desconto" %>
+            <div class="form-text">
+              Use um texto simples, pois ele será exibido para o cliente final.
+            </div>
+          </div>
+
+          <div class="alert alert-warning border-0 rounded-4">
+            Esta regra vale para o programa geral do estabelecimento. Em breve, será possível criar programas separados por item, serviço ou produto.
+          </div>
+
+          <div class="d-flex gap-2">
+            <%= form.submit "Salvar programa", class: "btn btn-primary btn-lg" %>
+            <%= link_to "Cancelar", loyalty_program_path, class: "btn btn-outline-secondary btn-lg" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
