@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Fideli</title>
+    <title>Loy</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -14,15 +14,23 @@
   <body class="bg-light">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
       <div class="container">
-        <% if controller_name.start_with?("client") || request.path.start_with?("/cliente") %>
-          <%= link_to "Fideli", client_portal_path, class: "navbar-brand fw-semibold" %>
+        <% if controller_path.start_with?("owner") %>
+          <%= link_to "Loy", owner_dashboard_path, class: "navbar-brand fw-semibold" %>
+
+          <div class="navbar-nav ms-auto">
+            <%= link_to "Dashboard", owner_dashboard_path, class: "nav-link" %>
+            <%= link_to "Empresas", owner_companies_path, class: "nav-link" %>
+            <%= button_to "Sair", logout_path, method: :delete, class: "btn btn-sm btn-outline-light ms-lg-3" %>
+          </div>
+        <% elsif controller_name.start_with?("client") || request.path.start_with?("/cliente") %>
+          <%= link_to "Loy", client_portal_path, class: "navbar-brand fw-semibold" %>
 
           <div class="navbar-nav ms-auto">
             <span class="navbar-text text-white-50 me-3">Meu cartão fidelidade</span>
             <%= button_to "Sair", client_logout_path, method: :delete, class: "btn btn-sm btn-outline-light" %>
           </div>
-        <% elsif logged_in? && barber? %>
-          <%= link_to "Fideli", root_path, class: "navbar-brand fw-semibold" %>
+        <% elsif logged_in? && business? %>
+          <%= link_to "Loy", root_path, class: "navbar-brand fw-semibold" %>
 
           <div class="navbar-nav ms-auto">
             <%= link_to "Dashboard", root_path, class: "nav-link" %>
@@ -34,7 +42,7 @@
             <%= button_to "Sair", logout_path, method: :delete, class: "btn btn-sm btn-outline-light ms-lg-3" %>
           </div>
         <% else %>
-          <%= link_to "Fideli", root_path, class: "navbar-brand fw-semibold" %>
+          <%= link_to "Loy", root_path, class: "navbar-brand fw-semibold" %>
         <% end %>
       </div>
     </nav>

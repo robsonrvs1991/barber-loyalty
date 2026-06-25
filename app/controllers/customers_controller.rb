@@ -1,4 +1,7 @@
 class CustomersController < ApplicationController
+  before_action :require_login
+  before_action :require_barber
+  before_action :require_active_subscription
   before_action :set_customer, only: [:show, :edit, :update, :destroy]
 
   def index
@@ -22,8 +25,8 @@ class CustomersController < ApplicationController
     @customer.email = @customer.email.to_s.downcase
 
     if @customer.save
-      flash[:notice] = "Cliente cadastrado. Senha temporária: #{@temporary_password}"
-      redirect_to customer_path(@customer)
+      send_customer_access_email
+      redirect_to customer_path(@customer), notice: "Cliente cadastrado. Enviamos o acesso por e-mail."
     else
       render :new, status: :unprocessable_entity
     end
@@ -55,5 +58,17 @@ class CustomersController < ApplicationController
 
   def customer_params
     params.require(:user).permit(:name, :email, :phone)
+  end
+
+  def send_customer_access_email
+    CustomerMailer.with(
+      customer: @customer,
+      temporary_password: @temporary_password,
+      company: current_barbershop,
+      login_url: "#{request.base_url}/cliente/login"
+    ).welcome_email.deliver_now
+  rescue StandardError => e
+    Rails.logger.error("[CustomerMailer] Falha ao enviar acesso: #{e.class} - #{e.message}")
+    flash[:alert] = "Cliente cadastrado, mas não foi possível enviar o e-mail. Senha temporária: #{@temporary_password}"
   end
 end

@@ -1,9 +1,12 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user,
                 :current_barbershop,
+                :current_company,
                 :current_client,
                 :logged_in?,
                 :client_logged_in?,
+                :owner?,
+                :business?,
                 :barber?,
                 :customer?
 
@@ -22,6 +25,11 @@ class ApplicationController < ActionController::Base
     @current_barbershop ||= current_user.barbershop
   end
 
+  def current_company
+    return nil unless current_barbershop
+    @current_company ||= Company.find_by(id: current_barbershop.id)
+  end
+
   def logged_in?
     current_user.present?
   end
@@ -30,8 +38,16 @@ class ApplicationController < ActionController::Base
     current_client.present?
   end
 
+  def owner?
+    current_user&.role == "owner"
+  end
+
+  def business?
+    current_user&.role.in?(["business", "barber"])
+  end
+
   def barber?
-    current_user&.role == "barber"
+    business?
   end
 
   def customer?
@@ -42,11 +58,25 @@ class ApplicationController < ActionController::Base
     redirect_to login_path, alert: "Faça login para continuar." unless logged_in?
   end
 
+  def require_owner
+    redirect_to login_path, alert: "Acesso restrito ao administrador da Loy." unless owner?
+  end
+
   def require_barber
-    redirect_to root_path, alert: "Acesso restrito ao barbeiro." unless barber?
+    redirect_to root_path, alert: "Acesso restrito ao responsável da empresa." unless business?
   end
 
   def require_customer
-    redirect_to cliente_login_path, alert: "Acesso restrito ao cliente." unless customer?
+    redirect_to client_login_path, alert: "Acesso restrito ao cliente." unless customer?
+  end
+
+  def require_active_subscription
+    return if owner?
+    return unless business?
+
+    subscription = current_company&.subscription
+    return if subscription.blank? || subscription.active?
+
+    redirect_to subscription_blocked_path, alert: "Assinatura suspensa. Entre em contato com a Loy para reativar o acesso."
   end
 end

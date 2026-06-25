@@ -10,6 +10,17 @@ Rails.application.routes.draw do
   delete "/cliente/logout", to: "client_sessions#destroy", as: :client_logout
   get    "/cliente",        to: "client_portal#index",     as: :client_portal
 
+  get "/assinatura/bloqueada", to: "subscriptions#blocked", as: :subscription_blocked
+
+  namespace :owner do
+    get "/", to: "dashboard#index", as: :dashboard
+    resources :companies do
+      member do
+        patch :reset_owner_password
+      end
+    end
+  end
+
   resource :barbershop, only: [:show, :edit, :update]
   resources :customers
   resources :services

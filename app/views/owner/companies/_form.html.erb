@@ -1,0 +1,95 @@
+<%= form_with model: [:owner, @company] do |form| %>
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <%= form.label :name, "Nome fantasia", class: "form-label" %>
+      <%= form.text_field :name, class: "form-control", required: true %>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <%= form.label :legal_name, "Razão social", class: "form-label" %>
+      <%= form.text_field :legal_name, class: "form-control" %>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <%= form.label :document, "CNPJ/CPF", class: "form-label" %>
+      <%= form.text_field :document, class: "form-control" %>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <%= form.label :email, "E-mail da empresa", class: "form-label" %>
+      <%= form.email_field :email, class: "form-control" %>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <%= form.label :whatsapp, "WhatsApp", class: "form-label" %>
+      <%= form.text_field :whatsapp, class: "form-control" %>
+    </div>
+
+    <div class="col-md-12 mb-3">
+      <%= form.label :address, "Endereço", class: "form-label" %>
+      <%= form.text_field :address, class: "form-control" %>
+    </div>
+  </div>
+
+  <h2 class="h5 mt-4">Responsável pelo negócio</h2>
+
+  <%= fields_for :owner_user, @owner_user do |user_form| %>
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <%= user_form.label :name, "Nome", class: "form-label" %>
+        <%= user_form.text_field :name, class: "form-control", required: true %>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <%= user_form.label :email, "E-mail de login", class: "form-label" %>
+        <%= user_form.email_field :email, class: "form-control", required: true %>
+      </div>
+
+      <div class="col-md-4 mb-3">
+        <%= user_form.label :phone, "Telefone", class: "form-label" %>
+        <%= user_form.text_field :phone, class: "form-control" %>
+      </div>
+    </div>
+  <% end %>
+
+  <h2 class="h5 mt-4">Assinatura</h2>
+
+  <%= fields_for :subscription, @subscription do |sub_form| %>
+    <div class="row">
+      <div class="col-md-3 mb-3">
+        <%= sub_form.label :plan, "Plano", class: "form-label" %>
+        <%= sub_form.select :plan, [["Mensal", "monthly"], ["Free", "free"]], {}, class: "form-select" %>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <%= sub_form.label :price, "Valor", class: "form-label" %>
+        <%= sub_form.number_field :price, step: "0.01", class: "form-control" %>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <%= sub_form.label :status, "Status", class: "form-label" %>
+        <%= sub_form.select :status, Subscription::STATUSES.map { |s| [s.humanize, s] }, {}, class: "form-select" %>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <%= sub_form.label :trial_until, "Trial até", class: "form-label" %>
+        <%= sub_form.datetime_local_field :trial_until, class: "form-control" %>
+      </div>
+
+      <div class="col-md-3 mb-3 form-check">
+        <%= sub_form.check_box :free, class: "form-check-input" %>
+        <%= sub_form.label :free, "Mensalidade free", class: "form-check-label" %>
+      </div>
+
+      <div class="col-md-3 mb-3 form-check">
+        <%= sub_form.check_box :blocked, class: "form-check-input" %>
+        <%= sub_form.label :blocked, "Bloquear acesso", class: "form-check-label" %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="d-flex gap-2 mt-3">
+    <%= form.submit "Salvar", class: "btn btn-primary" %>
+    <%= link_to "Voltar", owner_companies_path, class: "btn btn-outline-secondary" %>
+  </div>
+<% end %>

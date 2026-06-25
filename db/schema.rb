@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_23_200000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_25_162503) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -29,11 +29,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_23_200000) do
   end
 
   create_table "barbershops", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
     t.string "address"
     t.datetime "created_at", null: false
+    t.string "document"
+    t.string "email"
+    t.string "legal_name"
     t.string "name"
     t.string "phone"
     t.datetime "updated_at", null: false
+    t.string "whatsapp"
   end
 
   create_table "loyalty_programs", force: :cascade do |t|
@@ -67,8 +72,27 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_23_200000) do
     t.index ["barbershop_id"], name: "index_services_on_barbershop_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "subscriptions", force: :cascade do |t|
     t.bigint "barbershop_id", null: false
+    t.boolean "blocked", default: false, null: false
+    t.datetime "created_at", null: false
+    t.datetime "expires_at"
+    t.boolean "free", default: false, null: false
+    t.datetime "last_payment_at"
+    t.string "plan", default: "monthly", null: false
+    t.decimal "price", precision: 10, scale: 2, default: "19.9", null: false
+    t.datetime "started_at"
+    t.string "status", default: "trial", null: false
+    t.datetime "trial_until"
+    t.datetime "updated_at", null: false
+    t.index ["barbershop_id"], name: "index_subscriptions_on_barbershop_id"
+    t.index ["blocked"], name: "index_subscriptions_on_blocked"
+    t.index ["free"], name: "index_subscriptions_on_free"
+    t.index ["status"], name: "index_subscriptions_on_status"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.bigint "barbershop_id"
     t.datetime "created_at", null: false
     t.string "email"
     t.string "name"
@@ -85,5 +109,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_23_200000) do
   add_foreign_key "loyalty_programs", "barbershops"
   add_foreign_key "rewards", "barbershops"
   add_foreign_key "services", "barbershops"
+  add_foreign_key "subscriptions", "barbershops"
   add_foreign_key "users", "barbershops"
 end

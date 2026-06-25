@@ -7,6 +7,7 @@ class ClientSessionsController < ApplicationController
     user = User.find_by(email: params[:email]&.downcase, role: "customer")
 
     if user&.authenticate(params[:password])
+      session[:user_id] = nil
       session[:client_user_id] = user.id
       redirect_to client_portal_path, notice: "Login realizado com sucesso."
     else

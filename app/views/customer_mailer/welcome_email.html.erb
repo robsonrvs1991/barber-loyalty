@@ -1,0 +1,32 @@
+<p>Olá, <strong><%= @customer.name %></strong>!</p>
+
+<p>
+  A <strong><%= @company.name %></strong> criou seu cartão fidelidade digital na <strong>Loy</strong>.
+</p>
+
+<p>Seus dados de acesso:</p>
+
+<p>
+  <strong>E-mail:</strong> <%= @customer.email %><br>
+  <strong>Senha temporária:</strong> <%= @temporary_password %>
+</p>
+
+<p>
+  Acesse seu cartão pelo link:<br>
+  <a href="<%= @login_url %>"><%= @login_url %></a>
+</p>
+
+<p>
+  Por lá você poderá acompanhar seus pontos, atendimentos e recompensas.
+</p>
+
+<p>
+  Até breve!<br>
+  Equipe <%= @company.name %>
+</p>
+
+<hr>
+
+<p style="font-size: 12px; color: #666;">
+  Powered by Loy
+</p>

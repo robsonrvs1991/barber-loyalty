@@ -1,0 +1,46 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 mb-1"><%= @company.name %></h1>
+    <p class="text-muted mb-0"><%= @company.legal_name %></p>
+  </div>
+
+  <div class="d-flex gap-2">
+    <%= link_to "Editar", edit_owner_company_path(@company), class: "btn btn-outline-primary" %>
+    <%= button_to "Resetar senha do responsável", reset_owner_password_owner_company_path(@company), method: :patch, class: "btn btn-outline-warning" %>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5">Empresa</h2>
+        <p class="mb-1"><strong>E-mail:</strong> <%= @company.email.presence || "-" %></p>
+        <p class="mb-1"><strong>WhatsApp:</strong> <%= @company.whatsapp.presence || "-" %></p>
+        <p class="mb-0"><strong>Clientes:</strong> <%= @customers_count %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5">Responsável</h2>
+        <p class="mb-1"><strong>Nome:</strong> <%= @owner_user&.name || "-" %></p>
+        <p class="mb-1"><strong>E-mail:</strong> <%= @owner_user&.email || "-" %></p>
+        <p class="mb-0"><strong>Telefone:</strong> <%= @owner_user&.phone || "-" %></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-4 mb-3">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5">Assinatura</h2>
+        <p class="mb-1"><strong>Status:</strong> <%= @subscription&.status_label || "-" %></p>
+        <p class="mb-1"><strong>Valor:</strong> R$ <%= number_with_precision(@subscription&.price || 0, precision: 2) %></p>
+        <p class="mb-0"><strong>Trial até:</strong> <%= @subscription&.trial_until ? l(@subscription.trial_until, format: :short) : "-" %></p>
+      </div>
+    </div>
+  </div>
+</div>

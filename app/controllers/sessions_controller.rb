@@ -1,14 +1,18 @@
 class SessionsController < ApplicationController
-  def new
-    redirect_to root_path if logged_in?
-  end
+  def new; end
 
   def create
-    user = User.find_by(email: params[:email].to_s.downcase.strip)
+    user = User.find_by(email: params[:email].to_s.downcase)
 
     if user&.authenticate(params[:password])
+      session[:client_user_id] = nil
       session[:user_id] = user.id
-      redirect_to root_path, notice: "Login realizado com sucesso."
+
+      if user.role == "owner"
+        redirect_to owner_dashboard_path, notice: "Login realizado com sucesso."
+      else
+        redirect_to root_path, notice: "Login realizado com sucesso."
+      end
     else
       flash.now[:alert] = "Email ou senha inválidos."
       render :new, status: :unprocessable_entity
