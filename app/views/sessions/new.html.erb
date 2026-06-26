@@ -68,12 +68,18 @@
               autocomplete: "email" %>
           </div>
 
-          <div class="mb-4">
+          <div class="mb-2">
             <%= form.label :password, "Senha", class: "form-label fw-semibold" %>
             <%= form.password_field :password,
               class: "form-control form-control-lg",
               placeholder: "Digite sua senha",
               autocomplete: "current-password" %>
+          </div>
+
+          <div class="text-end mb-4">
+            <%= link_to "Esqueci minha senha",
+                        new_password_reset_path,
+                        class: "small text-decoration-none fw-semibold" %>
           </div>
 
           <%= form.submit "Acessar minha conta", class: "btn btn-primary btn-lg w-100 shadow-sm" %>

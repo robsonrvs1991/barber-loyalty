@@ -1,0 +1,21 @@
+<h1>Redefinição de senha</h1>
+
+<p>Olá, <%= @user.name %>.</p>
+
+<p>Recebemos uma solicitação para redefinir sua senha no Loy.</p>
+
+<p>
+  Para criar uma nova senha, clique no link abaixo:
+</p>
+
+<p>
+  <%= link_to "Redefinir minha senha", @reset_url %>
+</p>
+
+<p>Este link é válido por 2 horas.</p>
+
+<p>
+  Se você não solicitou essa alteração, ignore este e-mail.
+</p>
+
+<p>Equipe Loy</p>

@@ -6,6 +6,11 @@ Rails.application.routes.draw do
   post   "/login",  to: "sessions#create"
   delete "/logout", to: "sessions#destroy", as: :logout
 
+  get   "/esqueci-senha",          to: "password_resets#new",    as: :new_password_reset
+  post  "/esqueci-senha",          to: "password_resets#create", as: :password_resets
+  get   "/redefinir-senha/:token", to: "password_resets#edit",   as: :edit_password_reset
+  patch "/redefinir-senha/:token", to: "password_resets#update", as: :password_reset
+
   get    "/cliente/login",  to: "client_sessions#new",     as: :client_login
   post   "/cliente/login",  to: "client_sessions#create"
   delete "/cliente/logout", to: "client_sessions#destroy", as: :client_logout
@@ -35,7 +40,12 @@ Rails.application.routes.draw do
 
   resource :barbershop, only: [:show, :edit, :update]
 
-  resources :customers
+  resources :customers do
+    member do
+      patch :update_password
+    end
+  end
+
   resources :services
   resources :loyalty_programs
 

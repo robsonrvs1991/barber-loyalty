@@ -20,14 +20,14 @@ class ApplicationController < ActionController::Base
     @current_client ||= User.find_by(id: session[:client_user_id]) if session[:client_user_id]
   end
 
-  def current_barbershop
+  def current_company
     return nil unless current_user
-    @current_barbershop ||= current_user.barbershop
+
+    @current_company ||= Company.find_by(id: current_user.barbershop_id)
   end
 
-  def current_company
-    return nil unless current_barbershop
-    @current_company ||= Company.find_by(id: current_barbershop.id)
+  def current_barbershop
+    current_company
   end
 
   def logged_in?
@@ -77,6 +77,7 @@ class ApplicationController < ActionController::Base
     subscription = current_company&.subscription
     return if subscription.blank? || subscription.active?
 
-    redirect_to subscription_blocked_path, alert: "Assinatura suspensa. Entre em contato com a Loy para reativar o acesso."
+    redirect_to subscription_blocked_path,
+                alert: "Assinatura suspensa. Entre em contato com a Loy para reativar o acesso."
   end
 end

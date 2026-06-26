@@ -5,14 +5,32 @@ class RewardsController < ApplicationController
   def index
     @code = params[:code].to_s.strip.upcase
 
-    @rewards = current_user.barbershop
-                           .rewards
-                           .includes(:customer)
-                           .order(created_at: :desc)
+    @page = params[:page].to_i
+    @page = 1 if @page < 1
+
+    @per_page = 10
+
+    rewards_scope = current_user.barbershop
+                                .rewards
+                                .includes(:customer)
+                                .order(created_at: :desc)
 
     if @code.present?
-      @rewards = @rewards.where("UPPER(code) LIKE ?", "%#{@code}%")
+      rewards_scope = rewards_scope.where("UPPER(code) LIKE ?", "%#{@code}%")
     end
+
+    @total_rewards = rewards_scope.count
+    @used_rewards_count = rewards_scope.where(used: true).count
+    @available_rewards_count = rewards_scope.where(used: false).count
+
+    @total_pages = (@total_rewards.to_f / @per_page).ceil
+    @total_pages = 1 if @total_pages < 1
+
+    @page = @total_pages if @page > @total_pages
+
+    @rewards = rewards_scope
+               .offset((@page - 1) * @per_page)
+               .limit(@per_page)
   end
 
   def show

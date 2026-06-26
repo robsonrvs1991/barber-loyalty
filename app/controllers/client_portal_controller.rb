@@ -4,9 +4,9 @@ class ClientPortalController < ApplicationController
 
   def index
     @customer = current_client
-    @barbershop = @customer.barbershop
+    @company = @customer.barbershop
 
-    @loyalty_programs = @barbershop.loyalty_programs.active.includes(:service).order(created_at: :asc)
+    @loyalty_programs = @company.loyalty_programs.active.includes(:service).order(created_at: :asc)
     @loyalty_program = @loyalty_programs.first
 
     @required_points = @loyalty_program&.required_visits.to_i
@@ -17,12 +17,12 @@ class ClientPortalController < ApplicationController
 
     @appointments = @customer.customer_appointments.includes(:service).order(created_at: :desc)
     @rewards = @customer.rewards.includes(:loyalty_program).order(created_at: :desc)
-    @services = @barbershop.services.where(active: true).order(:name)
+    @services = @company.services.where(active: true).order(:name)
   end
 
   private
 
   def ensure_client_logged_in
-    redirect_to cliente_login_path, alert: "Faça login para acessar seu cartão fidelidade." unless current_client
+    redirect_to client_login_path, alert: "Faça login para acessar seu cartão fidelidade." unless current_client
   end
 end

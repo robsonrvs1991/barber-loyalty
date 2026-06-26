@@ -1,12 +1,67 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
-  <h1>Atendimentos</h1>
+  <div>
+    <h1 class="h3 mb-1">Atendimentos</h1>
+    <p class="text-muted mb-0">
+      Histórico de atendimentos registrados.
+      <% if @total_appointments.to_i > 0 %>
+        Total: <%= @total_appointments %>
+      <% end %>
+    </p>
+  </div>
+
   <%= link_to "Novo atendimento", new_appointment_path, class: "btn btn-primary" %>
 </div>
-<table class="table table-striped bg-white">
-<thead><tr><th>Cliente</th><th>Serviço</th><th>Pontos</th><th>Pago</th><th>Data</th></tr></thead>
-<tbody>
-<% @appointments.each do |a| %>
-<tr><td><%= a.customer.name %></td><td><%= a.service.name %></td><td><%= a.points %></td><td><%= a.paid ? "Sim" : "Não" %></td><td><%= l(a.created_at, format: :short) %></td></tr>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    <table class="table table-striped table-hover mb-0">
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Serviço</th>
+          <th>Pontos</th>
+          <th>Pago</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @appointments.each do |a| %>
+          <tr>
+            <td><%= a.customer&.name %></td>
+            <td><%= a.service&.name %></td>
+            <td><%= a.points %></td>
+            <td><%= a.paid ? "Sim" : "Não" %></td>
+            <td><%= l(a.created_at, format: :short) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% if @total_pages.to_i > 1 %>
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+
+      <li class="page-item <%= 'disabled' if @page <= 1 %>">
+        <%= link_to "Anterior",
+                    appointments_path(page: @page - 1),
+                    class: "page-link" %>
+      </li>
+
+      <% (1..@total_pages).each do |page| %>
+        <li class="page-item <%= 'active' if page == @page %>">
+          <%= link_to page, appointments_path(page: page), class: "page-link" %>
+        </li>
+      <% end %>
+
+      <li class="page-item <%= 'disabled' if @page >= @total_pages %>">
+        <%= link_to "Próxima",
+                    appointments_path(page: @page + 1),
+                    class: "page-link" %>
+      </li>
+
+    </ul>
+  </nav>
 <% end %>
-</tbody>
-</table>

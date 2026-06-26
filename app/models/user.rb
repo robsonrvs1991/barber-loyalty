@@ -29,6 +29,24 @@ class User < ApplicationRecord
     role == "customer"
   end
 
+  def generate_password_reset_token!
+    update!(
+      reset_password_token: SecureRandom.urlsafe_base64(32),
+      reset_password_sent_at: Time.current
+    )
+  end
+
+  def password_reset_expired?
+    reset_password_sent_at.blank? || reset_password_sent_at < 2.hours.ago
+  end
+
+  def clear_password_reset_token!
+    update!(
+      reset_password_token: nil,
+      reset_password_sent_at: nil
+    )
+  end
+
   def loyalty_points
     if has_attribute?(:loyalty_points)
       self[:loyalty_points].to_i

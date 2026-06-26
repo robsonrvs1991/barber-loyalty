@@ -1,26 +1,119 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="h3 mb-0"><%= @customer.name %></h1>
-  <div class="d-flex gap-2"><%= link_to "Editar", edit_customer_path(@customer), class: "btn btn-outline-primary" %><%= link_to "Voltar", customers_path, class: "btn btn-outline-secondary" %></div>
+
+  <div class="d-flex gap-2">
+    <%= link_to "Editar", edit_customer_path(@customer), class: "btn btn-outline-primary" %>
+    <%= link_to "Voltar", customers_path, class: "btn btn-outline-secondary" %>
+  </div>
 </div>
 
-<% if flash[:notice].to_s.include?("Senha temporária") %><div class="alert alert-success"><%= flash[:notice] %></div><% end %>
-
 <div class="row">
-  <div class="col-md-4 mb-4"><div class="card shadow-sm"><div class="card-body"><h2 class="h5">Dados de acesso</h2><p class="mb-1"><strong>E-mail:</strong> <%= @customer.email %></p><p class="mb-1"><strong>Telefone:</strong> <%= @customer.phone %></p><p class="mb-0"><strong>Pontos:</strong> <%= @customer.loyalty_points.to_i %></p></div></div></div>
+  <div class="col-md-4 mb-4">
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5">Dados de acesso</h2>
+
+        <p class="mb-1"><strong>E-mail:</strong> <%= @customer.email %></p>
+        <p class="mb-1"><strong>Telefone:</strong> <%= @customer.phone %></p>
+        <p class="mb-3"><strong>Pontos:</strong> <%= @customer.loyalty_points.to_i %></p>
+
+        <button type="button"
+                class="btn btn-sm btn-warning"
+                data-bs-toggle="modal"
+                data-bs-target="#changePasswordModal">
+          Alterar senha
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="col-md-8 mb-4">
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <h2 class="h5">Link para o cliente</h2>
-      <p class="text-muted">Envie este endereço para o cliente acessar o cartão fidelidade:</p>
-      <code><%= "#{request.base_url}/cliente/login" %></code>
-      <div class="mt-3">
-        <%= link_to "Abrir portal do cliente", "#{request.base_url}/cliente", target: "_blank", class: "btn btn-sm btn-success" %>
+    <div class="card shadow-sm h-100">
+      <div class="card-body">
+        <h2 class="h5">Link para o cliente</h2>
+        <p class="text-muted">Envie este endereço para o cliente acessar o cartão fidelidade:</p>
+
+        <code><%= "#{request.base_url}/cliente/login" %></code>
+
+        <div class="mt-3">
+          <%= link_to "Abrir portal do cliente",
+                      "#{request.base_url}/cliente",
+                      target: "_blank",
+                      class: "btn btn-sm btn-success" %>
+        </div>
       </div>
     </div>
   </div>
 </div>
+
+<div class="card shadow-sm mb-4">
+  <div class="card-body">
+    <h2 class="h5">Histórico de Atendimentos</h2>
+
+    <% if @appointments.any? %>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Serviço</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @appointments.each do |appointment| %>
+            <tr>
+              <td><%= appointment.service&.name || "Atendimento" %></td>
+              <td><%= l(appointment.created_at, format: :short) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p class="text-muted mb-0">Nenhum atendimento registrado.</p>
+    <% end %>
+  </div>
 </div>
 
-<div class="card shadow-sm mb-4"><div class="card-body"><h2 class="h5">Histórico de Atendimentos</h2>
-<% if @appointments.any? %><table class="table"><thead><tr><th>Serviço</th><th>Data</th></tr></thead><tbody><% @appointments.each do |appointment| %><tr><td><%= appointment.service&.name || "Atendimento" %></td><td><%= l(appointment.created_at, format: :short) %></td></tr><% end %></tbody></table><% else %><p class="text-muted mb-0">Nenhum atendimento registrado.</p><% end %>
-</div></div>
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <%= form_with model: @customer,
+                    url: update_password_customer_path(@customer),
+                    method: :patch,
+                    local: true do |form| %>
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="changePasswordModalLabel">Alterar senha do cliente</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+
+        <div class="modal-body">
+          <p class="text-muted">
+            Defina uma nova senha para o cliente acessar o cartão fidelidade.
+          </p>
+
+          <div class="mb-3">
+            <%= form.label :password, "Nova senha", class: "form-label" %>
+            <%= form.password_field :password, class: "form-control", minlength: 6, required: true %>
+          </div>
+
+          <div class="mb-3">
+            <%= form.label :password_confirmation, "Confirmar nova senha", class: "form-label" %>
+            <%= form.password_field :password_confirmation, class: "form-control", minlength: 6, required: true %>
+          </div>
+
+          <div class="form-check">
+            <%= check_box_tag :send_email, "1", true, class: "form-check-input", id: "send_email" %>
+            <%= label_tag :send_email, "Enviar nova senha por e-mail para o cliente", class: "form-check-label" %>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <%= form.submit "Salvar nova senha", class: "btn btn-warning" %>
+        </div>
+
+      <% end %>
+    </div>
+  </div>
+</div>

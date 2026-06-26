@@ -3,7 +3,20 @@ class AppointmentsController < ApplicationController
   before_action :require_barber
 
   def index
-    @appointments = current_user.barbershop.appointments.includes(:customer, :barber, :service).order(created_at: :desc)
+    @page = params[:page].to_i
+    @page = 1 if @page < 1
+
+    @per_page = 10
+
+    scope = current_user.barbershop
+                        .appointments
+                        .includes(:customer, :barber, :service)
+                        .order(created_at: :desc)
+
+    @total_appointments = scope.count
+    @total_pages = (@total_appointments.to_f / @per_page).ceil
+
+    @appointments = scope.offset((@page - 1) * @per_page).limit(@per_page)
   end
 
   def show
@@ -22,11 +35,13 @@ class AppointmentsController < ApplicationController
 
     if @appointment.save
       Reward.create_if_earned!(
-  @appointment.customer,
-  current_user.barbershop,
-  service: @appointment.service
-)
-      redirect_to customer_path(@appointment.customer), notice: "Atendimento registrado com sucesso."
+        @appointment.customer,
+        current_user.barbershop,
+        service: @appointment.service
+      )
+
+      redirect_to customer_path(@appointment.customer),
+                  notice: "Atendimento registrado com sucesso."
     else
       load_form_data
       render :new, status: :unprocessable_entity

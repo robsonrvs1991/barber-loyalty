@@ -4,9 +4,26 @@ class ServicesController < ApplicationController
   before_action :set_service, only: [:show, :edit, :update, :destroy]
 
   def index
-    @services = current_user.barbershop.services.order(active: :desc, name: :asc)
-    @active_services_count = @services.select(&:active).count
-    @inactive_services_count = @services.reject(&:active).count
+    @page = params[:page].to_i
+    @page = 1 if @page < 1
+
+    @per_page = 10
+
+    services_scope = current_user.barbershop.services
+                                 .order(active: :desc, name: :asc)
+
+    @total_services = services_scope.count
+    @active_services_count = services_scope.where(active: true).count
+    @inactive_services_count = services_scope.where(active: false).count
+
+    @total_pages = (@total_services.to_f / @per_page).ceil
+    @total_pages = 1 if @total_pages < 1
+
+    @page = @total_pages if @page > @total_pages
+
+    @services = services_scope
+                .offset((@page - 1) * @per_page)
+                .limit(@per_page)
   end
 
   def show; end

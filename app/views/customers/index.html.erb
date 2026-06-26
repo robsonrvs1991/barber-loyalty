@@ -1,23 +1,105 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="h3 mb-0">Clientes</h1>
+  <div>
+    <h1 class="h3 mb-1">Clientes</h1>
+    <p class="text-muted mb-0">
+      Clientes cadastrados. Total:
+      <strong><%= @total_customers %></strong>
+    </p>
+  </div>
+
   <%= link_to "Novo Cliente", new_customer_path, class: "btn btn-primary" %>
 </div>
 
 <div class="card shadow-sm">
-  <div class="card-body">
-    <table class="table table-hover align-middle">
-      <thead><tr><th>Nome</th><th>E-mail</th><th>Telefone</th><th>Pontos</th><th></th></tr></thead>
-      <tbody>
-        <% @customers.each do |customer| %>
-          <tr>
-            <td><%= customer.name %></td>
-            <td><%= customer.email %></td>
-            <td><%= customer.phone %></td>
-            <td><%= customer.loyalty_points.to_i %></td>
-            <td class="text-end"><%= link_to "Ver", customer_path(customer), class: "btn btn-sm btn-outline-primary" %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+  <div class="card-body p-0">
+
+    <% if @customers.any? %>
+
+      <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Nome</th>
+              <th>E-mail</th>
+              <th>Telefone</th>
+              <th>Pontos</th>
+              <th class="text-end">Ações</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @customers.each do |customer| %>
+              <tr>
+                <td>
+                  <strong><%= customer.name %></strong>
+                </td>
+
+                <td>
+                  <%= customer.email %>
+                </td>
+
+                <td>
+                  <%= customer.phone.presence || "-" %>
+                </td>
+
+                <td>
+                  <span class="badge bg-success">
+                    <%= customer.loyalty_points.to_i %>
+                  </span>
+                </td>
+
+                <td class="text-end">
+                  <%= link_to "Ver",
+                              customer_path(customer),
+                              class: "btn btn-sm btn-outline-primary" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+    <% else %>
+
+      <div class="text-center py-5">
+        <h5 class="text-muted mb-2">
+          Nenhum cliente cadastrado.
+        </h5>
+
+        <%= link_to "Cadastrar primeiro cliente",
+                    new_customer_path,
+                    class: "btn btn-primary mt-2" %>
+      </div>
+
+    <% end %>
+
   </div>
 </div>
+
+<% if @total_pages > 1 %>
+
+  <nav class="mt-4">
+    <ul class="pagination justify-content-center">
+
+      <li class="page-item <%= 'disabled' if @page <= 1 %>">
+        <%= link_to "« Anterior",
+                    customers_path(page: @page - 1),
+                    class: "page-link" %>
+      </li>
+
+      <li class="page-item disabled">
+        <span class="page-link">
+          Página <%= @page %> de <%= @total_pages %>
+        </span>
+      </li>
+
+      <li class="page-item <%= 'disabled' if @page >= @total_pages %>">
+        <%= link_to "Próxima »",
+                    customers_path(page: @page + 1),
+                    class: "page-link" %>
+      </li>
+
+    </ul>
+  </nav>
+
+<% end %>
