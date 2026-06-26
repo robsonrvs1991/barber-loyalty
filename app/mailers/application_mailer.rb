@@ -1,4 +1,1 @@
-class ApplicationMailer < ActionMailer::Base
-  default from: ENV.fetch("MAIL_FROM", "Loy <no-reply@loy.app>")
-  layout "mailer"
-end
+app/mailers/application_mailer.rb
