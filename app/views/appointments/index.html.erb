@@ -19,9 +19,11 @@
         <tr>
           <th>Cliente</th>
           <th>Serviço</th>
+          <th>Valor</th>
           <th>Pontos</th>
           <th>Pago</th>
           <th>Data</th>
+          <th class="text-end">Ações</th>
         </tr>
       </thead>
 
@@ -30,9 +32,25 @@
           <tr>
             <td><%= a.customer&.name %></td>
             <td><%= a.service&.name %></td>
+            <td><%= number_to_currency(a.price || 0, unit: "R$ ", separator: ",", delimiter: ".") %></td>
             <td><%= a.points %></td>
             <td><%= a.paid ? "Sim" : "Não" %></td>
             <td><%= l(a.created_at, format: :short) %></td>
+            <td class="text-end">
+              <% unless a.paid? %>
+                <%= button_to "Marcar como pago",
+                              mark_as_paid_appointment_path(a),
+                              method: :patch,
+                              class: "btn btn-sm btn-outline-success",
+                              form: {
+                                data: {
+                                  turbo_confirm: "Deseja marcar este atendimento como pago?"
+                                }
+                              } %>
+              <% else %>
+                <span class="text-muted">-</span>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </tbody>

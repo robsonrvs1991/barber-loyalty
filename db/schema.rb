@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_30_200241) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_30_204353) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -22,6 +22,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_30_200241) do
     t.text "notes"
     t.boolean "paid"
     t.integer "points", default: 1, null: false
+    t.decimal "price", precision: 10, scale: 2, default: "0.0", null: false
     t.bigint "service_id", null: false
     t.datetime "updated_at", null: false
     t.index ["barbershop_id"], name: "index_appointments_on_barbershop_id"

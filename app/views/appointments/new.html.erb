@@ -1,17 +1,76 @@
 <h1>Novo atendimento</h1>
-<div class="card"><div class="card-body">
-<%= form_with model: @appointment do |form| %>
-  <% if @appointment.errors.any? %><div class="alert alert-danger"><%= @appointment.errors.full_messages.join(', ') %></div><% end %>
-  <div class="mb-3">
-    <%= form.label :customer_id, "Cliente", class: "form-label" %>
-    <%= form.collection_select :customer_id, @customers, :id, :name, { selected: params[:customer_id], prompt: "Selecione" }, class: "form-select" %>
+
+<div class="card">
+  <div class="card-body">
+    <%= form_with model: @appointment do |form| %>
+      <% if @appointment.errors.any? %>
+        <div class="alert alert-danger">
+          <%= @appointment.errors.full_messages.join(", ") %>
+        </div>
+      <% end %>
+
+      <div class="mb-3">
+        <%= form.label :customer_id, "Cliente", class: "form-label" %>
+        <%= form.collection_select :customer_id, @customers, :id, :name, { selected: params[:customer_id], prompt: "Selecione" }, class: "form-select" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :service_id, "Serviço", class: "form-label" %>
+        <%= form.collection_select :service_id, @services, :id, :name, { prompt: "Selecione" }, class: "form-select", id: "appointment_service_id" %>
+      </div>
+
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <%= form.label :price, "Valor (R$)", class: "form-label" %>
+          <%= form.number_field :price, class: "form-control", min: 0, step: 0.01, id: "appointment_price" %>
+        </div>
+
+        <div class="col-md-6 mb-3">
+          <%= form.label :points, "Pontos", class: "form-label" %>
+          <%= form.number_field :points, class: "form-control", min: 0, step: 1, id: "appointment_points" %>
+        </div>
+      </div>
+
+      <div class="form-check mb-3">
+        <%= form.check_box :paid, class: "form-check-input", checked: true %>
+        <%= form.label :paid, "Atendimento pago/confirmado", class: "form-check-label" %>
+      </div>
+
+      <div class="mb-3">
+        <%= form.label :notes, "Observação", class: "form-label" %>
+        <%= form.text_area :notes, class: "form-control", rows: 3 %>
+      </div>
+
+      <%= form.submit "Registrar", class: "btn btn-primary" %>
+      <%= link_to "Voltar", appointments_path, class: "btn btn-outline-secondary" %>
+    <% end %>
   </div>
-  <div class="mb-3">
-    <%= form.label :service_id, "Serviço", class: "form-label" %>
-    <%= form.collection_select :service_id, @services, :id, :name, { prompt: "Selecione" }, class: "form-select" %>
-  </div>
-  <div class="form-check mb-3"><%= form.check_box :paid, class: "form-check-input", checked: true %><%= form.label :paid, "Atendimento pago/confirmado", class: "form-check-label" %></div>
-  <div class="mb-3"><%= form.label :notes, "Observação", class: "form-label" %><%= form.text_area :notes, class: "form-control", rows: 3 %></div>
-  <%= form.submit "Registrar", class: "btn btn-primary" %> <%= link_to "Voltar", appointments_path, class: "btn btn-outline-secondary" %>
-<% end %>
-</div></div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const services = {
+      <% @services.each do |service| %>
+        "<%= service.id %>": {
+          price: "<%= service.price || 0 %>",
+          points: "<%= service.points || 0 %>"
+        },
+      <% end %>
+    };
+
+    const serviceSelect = document.getElementById("appointment_service_id");
+    const priceInput = document.getElementById("appointment_price");
+    const pointsInput = document.getElementById("appointment_points");
+
+    if (serviceSelect && priceInput && pointsInput) {
+      serviceSelect.addEventListener("change", function() {
+        const selectedService = services[this.value];
+
+        if (selectedService) {
+          priceInput.value = selectedService.price;
+          pointsInput.value = selectedService.points;
+        }
+      });
+    }
+  });
+</script>

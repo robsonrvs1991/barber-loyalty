@@ -19,7 +19,16 @@
 
         <div class="mb-3">
           <small class="text-muted d-block">Nome</small>
-          <div class="fs-5 fw-semibold"><%= @service.name %></div>
+          <div class="fs-5 fw-semibold">
+            <%= @service.name %>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <small class="text-muted d-block">Valor</small>
+          <div class="fs-5 fw-semibold">
+            <%= number_to_currency(@service.price || 0, unit: "R$ ", separator: ",", delimiter: ".") %>
+          </div>
         </div>
 
         <div class="mb-3">
@@ -31,6 +40,7 @@
 
         <div>
           <small class="text-muted d-block">Status</small>
+
           <% if @service.active? %>
             <span class="badge rounded-pill text-bg-success">Ativo</span>
           <% else %>
@@ -45,9 +55,10 @@
     <div class="card border-0 shadow-sm bg-light">
       <div class="card-body p-4">
         <h6 class="fw-bold">Como isso será usado?</h6>
+
         <p class="text-muted small mb-0">
           Este cadastro poderá ser vinculado a atendimentos, vendas ou programas de fidelidade.
-          Exemplo: café, pizza, corte, consulta, produto ou qualquer item vendido pelo negócio.
+          O valor e a pontuação serão preenchidos automaticamente no atendimento, mas poderão ser alterados no momento da venda, preservando o histórico daquele atendimento.
         </p>
       </div>
     </div>

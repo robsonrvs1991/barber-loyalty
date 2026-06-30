@@ -29,7 +29,7 @@ class ServicesController < ApplicationController
   def show; end
 
   def new
-    @service = current_user.barbershop.services.new(active: true, points: 1)
+    @service = current_user.barbershop.services.new(active: true, points: 1, price: 0)
   end
 
   def create
@@ -64,6 +64,6 @@ class ServicesController < ApplicationController
   end
 
   def service_params
-    params.require(:service).permit(:name, :active, :points)
+    params.require(:service).permit(:name, :price, :active, :points)
   end
 end

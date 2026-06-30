@@ -51,7 +51,12 @@ Rails.application.routes.draw do
 
   get "/loyalty_program", to: redirect("/loyalty_programs")
 
-  resources :appointments, only: [:index, :new, :create, :show]
+  resources :appointments, only: [:index, :new, :create, :show] do
+    member do
+      patch :mark_as_paid
+    end
+  end
+
   resources :rewards, only: [:index, :show, :update]
 
   get "up" => "rails/health#show", as: :rails_health_check

@@ -18,7 +18,9 @@ class User < ApplicationRecord
            dependent: :destroy
 
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: true
+  validates :email,
+            presence: true,
+            uniqueness: { message: "já está sendo utilizado por outro usuário." }
   validates :role, presence: true
 
   def barber?
