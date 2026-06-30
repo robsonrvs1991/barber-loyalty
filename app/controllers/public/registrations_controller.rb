@@ -26,10 +26,11 @@ class Public::RegistrationsController < ApplicationController
       CompanyAccessEmailService.deliver!(
         user: user,
         company: barbershop,
-        login_url: "#{request.base_url}/login"
+        login_url: "#{request.base_url}/login",
+        password: params[:password]
       )
     rescue StandardError => e
-      Rails.logger.error("[CompanyAccessEmailService] #{e.class} - #{e.message}")
+      Rails.logger.error("[CompanyAccessEmailService] Falha ao enviar cadastro público: #{e.class} - #{e.message}")
     end
 
     session[:user_id] = user.id
