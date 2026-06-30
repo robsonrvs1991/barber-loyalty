@@ -22,9 +22,20 @@ class Public::RegistrationsController < ApplicationController
       barbershop: barbershop
     )
 
+    begin
+      CompanyAccessEmailService.deliver!(
+        user: user,
+        company: barbershop,
+        login_url: "#{request.base_url}/login"
+      )
+    rescue StandardError => e
+      Rails.logger.error("[CompanyAccessEmailService] #{e.class} - #{e.message}")
+    end
+
     session[:user_id] = user.id
 
-    redirect_to app_dashboard_path, notice: "Cadastro realizado com sucesso. Bem-vindo ao Loy!"
+    redirect_to app_dashboard_path,
+                notice: "Cadastro realizado com sucesso. Bem-vindo ao Loy!"
   rescue ActiveRecord::RecordInvalid => e
     redirect_to signup_path, alert: e.record.errors.full_messages.to_sentence
   end
