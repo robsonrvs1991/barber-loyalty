@@ -20,15 +20,31 @@
     </div>
   </div>
 
-  <div class="mb-4">
-    <%= form.label :points, "Pontos gerados", class: "form-label fw-semibold" %>
-    <%= form.number_field :points,
-      class: "form-control form-control-lg",
-      min: 0,
-      step: 1,
-      placeholder: "Ex: 1" %>
-    <div class="form-text">
-      Quantidade de pontos que este item/serviço gera quando utilizado em um atendimento ou venda.
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <%= form.label :price, "Valor (R$)", class: "form-label fw-semibold" %>
+      <%= form.number_field :price,
+        class: "form-control form-control-lg",
+        min: 0,
+        step: 0.01,
+        placeholder: "0,00" %>
+
+      <div class="form-text">
+        Valor padrão do item ou serviço.
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-4">
+      <%= form.label :points, "Pontos gerados", class: "form-label fw-semibold" %>
+      <%= form.number_field :points,
+        class: "form-control form-control-lg",
+        min: 0,
+        step: 1,
+        placeholder: "1" %>
+
+      <div class="form-text">
+        Quantidade de pontos gerados para este item/serviço.
+      </div>
     </div>
   </div>
 
@@ -38,8 +54,9 @@
         <%= form.check_box :active, class: "form-check-input", role: "switch" %>
         <%= form.label :active, "Item/serviço ativo", class: "form-check-label fw-semibold" %>
       </div>
+
       <small class="text-muted">
-        Itens inativos ficam preservados no histórico, mas podem deixar de ser usados em novos lançamentos.
+        Itens inativos ficam preservados no histórico, mas deixam de aparecer em novos atendimentos.
       </small>
     </div>
   </div>

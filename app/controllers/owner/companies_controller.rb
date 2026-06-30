@@ -91,7 +91,15 @@ module Owner
         @company.update!(company_params)
         @subscription.update!(subscription_params)
 
-        if @owner_user && params[:owner_user].present?
+        if params[:owner_user].present?
+          @owner_user ||= @company.users.new(role: "business")
+
+          if @owner_user.new_record?
+            temporary_password = SecureRandom.alphanumeric(10)
+            @owner_user.password = temporary_password
+            @owner_user.password_confirmation = temporary_password
+          end
+
           @owner_user.update!(owner_user_params)
         end
       end
